@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <title>Electrical vehicle registration by US-state</title>
+</head>
+
+<body>
+    <h1 style="text-align: center">Electrical vehicle registration by US-state</h1>
+    <p style="text-align: center">Toggle between absolute and relative data</p>
+    <p style="text-align: center">Authors: Antonia Pecha, Simon Schnetzer, Leo Schweiger, Luca Troger</p>
+    <div id="selectMe"></div>
+    <div id="chartContainer"></div>
+</body>
+
+</html>
+
+<style>
+    .label {
+        margin-left: 15px;
+    }
+
+    #selection {
+        font-size: 19px;
+        margin-left: 15px;
+    }
+</style>
+
+<script>
+    const w = 1000;
+    const h = 500;
+
+    const margins = { top: 50, left: 100, bottom: 100, right: 100 }
+    const innerWidth = w - margins.left - margins.right;
+    const innerHeight = h - margins.top - margins.bottom;
+
+    const url = "data/better data new(2).csv";
+
+    d3.csv(url).then((data, error) => {
+        if (error) throw error;
+
+        data.forEach(d => {
+            d.state = d.state;
+            d.electric = + d.electric;
+            d.rel_electric = + d.rel_electric
+        });
+
+        const mySelection = document.getElementById("selectMe");
+
+        d3.select(mySelection).append("span").append("p").attr("class", "label").style("font-weight", "bold").style("color", "red").style("font-size", "25px");
+
+        const selectItems = ["Alphabetic", "Absolute numbers", "Numbers relative to population"];
+
+        d3.select(mySelection)
+            .append("span")
+            .append("select")
+            .attr("id", "selection")
+            .attr("name", "tasks")
+            .selectAll("option")
+            .data(selectItems)
+            .enter()
+            .append("option")
+            .attr("value", d => d)
+            .text(d => d);
+
+        document.addEventListener("DOMContentLoaded", myChart());
+
+        d3.select("#selection").on("change", function () {
+            const selectedOption = d3.select(this).node().value;
+            if (selectedOption == "Absolute numbers") {
+                data.sort((a, b) => {
+                    return d3.descending(a.electric, b.electric)
+                });
+            } else if (selectedOption == "Alphabetic") {
+                data.sort((a, b) => {
+                    if (a.state === "United States") return 1;
+                    if (b.state === "United States") return -1;
+                    return d3.ascending(a.state, b.state)
+                });
+            } else if (selectedOption == "Numbers relative to population") {
+                data.sort((a, b) => {
+                    return d3.descending(a.rel_electric, b.rel_electric)
+                });
+            }
+            myChart();
+        });
+
+        function myChart() {
+            const chartDIV = document.createElement("div");
+
+            const xScale = d3.scaleBand()
+                .domain(data.map((d) => d.state))
+                .rangeRound([0, innerWidth])
+                .paddingInner(0.05);
+
+            const yScale = d3.scaleLinear()
+                .domain([0, d3.max(data, (d) => d.electric)]).nice()
+                .range([innerHeight, 0]);
+
+            const xAxis = d3.axisBottom().scale(xScale);
+
+            const yAxis = d3.axisLeft().scale(yScale);
+
+            const svg = d3.select(chartDIV)
+                .append("svg")
+                .attr("viewBox", [0, 0, w, h]);
+
+            const mainG = svg
+                .append("g")
+                .attr("transform", `translate(${margins.left}, ${margins.top})`);
+
+            const g = mainG
+                .selectAll("g")
+                .data(data)
+                .enter()
+                .append("g")
+                .attr("transform", `translate(15,0)`);
+
+            g.append("rect")
+                .attr("class", "bars")
+                .attr("x", d => xScale(d.state) - innerWidth / data.length / 2)
+                .attr("y", d => yScale(d.electric))
+                .attr("width", innerWidth / data.length - 1.5)
+                .attr("height", (d) => innerHeight - yScale(d.electric))
+                .attr("fill", d => d.electric == d3.max(data, d => d.electric) ? "#f4c430" : "green")
+                .append("text")
+                .attr("x", 5 * 3)
+                .attr("y", (d, i) => i * 5)
+                .text(d => d.electric);
+
+            mainG
+                .append("g")
+                .call(xAxis)
+                .attr("transform", `translate(0, ${innerHeight})`);
+
+            mainG
+                .append("g")
+                .call(yAxis);
+
+            const showChart = document.getElementById("chartContainer");
+            while (showChart.firstChild) {
+                showChart.firstChild.remove();
+            }
+            showChart.appendChild(chartDIV);
+        }
+    });
+</script>
