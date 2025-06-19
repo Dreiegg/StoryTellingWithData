@@ -6,37 +6,56 @@
   
   body {
     font-family: sans-serif;
-    line-height: 1.6;
+    background: #f5f5f5;
     padding: 1rem;
-    background-color: #f5f5f5;
   }
   
   .container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 2rem;
   }
   
-  /* Sections */
-  .sidebar,
-  .content {
+  .story-block {
+    background: white;
     padding: 1rem;
-    background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
   
-  /* 2-column layout on desktop */
+  .story {
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+  
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .extra,
+  .chart {
+    background: #eaeaea;
+    padding: 1rem;
+    border-radius: 6px;
+    text-align: center;
+  }
+  
+  /* Desktop 2-column layout + alternierende Reihenfolge */
   @media (min-width: 768px) {
-    .container {
+    .row {
       flex-direction: row;
     }
   
-    .sidebar {
+    .extra {
       flex: 1;
     }
-  
-    .content {
+    .chart {
       flex: 2;
+    }
+  
+    .story-block:nth-of-type(even) .row {
+      flex-direction: row-reverse;
     }
   }
