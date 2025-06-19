@@ -63,7 +63,7 @@
                 .style("pointer-events", "none")
                 .style("opacity", 0);
 
-            const selectItems = ["Alphabetic", "Descending", "Numbers relative to population"];
+            const selectItems = ["Overview", "Absolute", "Relative"];
 
             d3.select(mySelection)
                 .append("span")
@@ -80,17 +80,17 @@
 
             d3.select("#selection").on("change", function () {
                 const selectedOption = d3.select(this).node().value;
-                if (selectedOption == "Descending") {
+                if (selectedOption == "Absolute") {
                     data.sort((a, b) => d3.descending(a.electric, b.electric));
                     yScaleType = "electric";
-                } else if (selectedOption == "Alphabetic") {
+                } else if (selectedOption == "Overview") {
                     data.sort((a, b) => {
                         if (a.state === "United States") return 1;
                         if (b.state === "United States") return -1;
                         return d3.ascending(a.state, b.state);
                     });
                     yScaleType = "electric";
-                } else if (selectedOption == "Numbers relative to population") {
+                } else if (selectedOption == "Relative") {
                     data.sort((a, b) => d3.descending(a.rel_electric, b.rel_electric));
                     yScaleType = "rel_electric";
                 }
@@ -108,10 +108,16 @@
                 const yMax = d3.max(data, (d) => d[yScaleType]);
                 const yScale = d3.scaleLinear()
                     .domain([0, yMax]).nice()
-                    .range([innerHeight, 0]);
-
-                const xAxis = d3.axisBottom().scale(xScale);
-                const yAxis = d3.axisLeft().scale(yScale).tickFormat(d => d3.format(".1f")(d / 1_000_000) + " Mill");
+                    .range([innerHeight, 0]);                const xAxis = d3.axisBottom().scale(xScale);
+                const yAxis = d3.axisLeft().scale(yScale).tickFormat(d => {
+                    if (yScaleType === "rel_electric") {
+                        // Format as percentage when in relative mode
+                        return d3.format(".1%")(d);
+                    } else {
+                        // Keep the original format for absolute values
+                        return d3.format(".1f")(d / 1_000_000) + " Mill";
+                    }
+                });
 
                 const svg = d3.select(chartDIV)
                     .append("svg")
@@ -134,12 +140,13 @@
                     .attr("y", d => yScale(d[yScaleType]))
                     .attr("width", xScale.bandwidth())
                     .attr("height", d => innerHeight - yScale(d[yScaleType]))
-                    .attr("fill", d => d[yScaleType] == yMax ? "#7932FA" : "green")
-                    .on("mouseover", function (event, d) {
+                    .attr("fill", d => d[yScaleType] == yMax ? "#7932FA" : "green")                    .on("mouseover", function (event, d) {
                         tooltip.transition()
                             .duration(200)
                             .style("opacity", 0.9);
-                        tooltip.html(d[yScaleType])
+                        tooltip.html(yScaleType === "rel_electric" ? 
+                            d3.format(".1%")(d[yScaleType]) :
+                            d3.format(",")(d[yScaleType]))
                             .style("left", (event.pageX + 10) + "px")
                             .style("top", (event.pageY - 28) + "px");
                         d3.select(this).attr("fill", "#ff8800");
@@ -159,18 +166,20 @@
                     .attr("class", "bar-label")
                     .attr("x", d => xScale(d.state) + xScale.bandwidth() / 2)
                     .attr("y", d => yScale(d[yScaleType]) - 5)
-                    .attr("text-anchor", "middle")
-                    .style("font-size", "12px")
+                    .attr("text-anchor", "middle")                    .style("font-size", "12px")
                     .style("fill", "#333")
                     .style("opacity", 0)
-                    .text(d => d3.format(".1f")(d[yScaleType] / 1000) + "K");
+                    .text(d => yScaleType === "rel_electric" ? 
+                        d3.format(".1%")(d[yScaleType]) : 
+                        d3.format(".1f")(d[yScaleType] / 1000) + "K");
 
-                g.selectAll("rect")
-                    .on("mouseover", function (event, d, i) {
+                g.selectAll("rect")                    .on("mouseover", function (event, d, i) {
                         tooltip.transition()
                             .duration(200)
                             .style("opacity", 0.9);
-                        tooltip.html(d[yScaleType])
+                        tooltip.html(yScaleType === "rel_electric" ? 
+                            d3.format(".1%")(d[yScaleType]) :
+                            d3.format(",")(d[yScaleType]))
                             .style("left", (event.pageX + 10) + "px")
                             .style("top", (event.pageY - 28) + "px");
 
