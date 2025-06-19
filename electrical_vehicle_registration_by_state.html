@@ -111,7 +111,7 @@
                     .range([innerHeight, 0]);
 
                 const xAxis = d3.axisBottom().scale(xScale);
-                const yAxis = d3.axisLeft().scale(yScale);
+                const yAxis = d3.axisLeft().scale(yScale).tickFormat(d => d3.format(".1f")(d / 1_000_000) + " Mill");
 
                 const svg = d3.select(chartDIV)
                     .append("svg")
@@ -134,7 +134,7 @@
                     .attr("y", d => yScale(d[yScaleType]))
                     .attr("width", xScale.bandwidth())
                     .attr("height", d => innerHeight - yScale(d[yScaleType]))
-                    .attr("fill", d => d[yScaleType] == yMax ? "#f4c430" : "green")
+                    .attr("fill", d => d[yScaleType] == yMax ? "#7932FA" : "green")
                     .on("mouseover", function (event, d) {
                         tooltip.transition()
                             .duration(200)
