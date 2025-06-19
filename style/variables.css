@@ -1,0 +1,42 @@
+:root {
+    /* === Farben === */
+    --bg-body: #f5f5f5;
+    --bg-block: #ffffff;
+    --bg-element: #eaeaea;
+    --text-default: #333333;
+    --text-muted: #555555;
+
+    /* === Schatten === */
+    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    /* === Abstände & Layout === */
+    --radius-default: 8px;
+    --radius-small: 6px;
+    --padding-default: 1rem;
+    --gap-small: 1rem;
+    --gap-large: 2rem;
+
+    /* === Schrift === */
+    --font-family: 'Nunito', sans-serif;
+    --font-weight-bold: bold;
+    --line-height: 1.5;
+
+    /* === Transition === */
+    --transition-duration: 0.3s;
+
+    /* === Typografie === */
+    --font-size-heading: 1.25rem;
+    --font-size-body: 0.95rem;
+    --letter-spacing-heading: 0.02em;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-body: #121212;
+        --bg-block: #1e1e1e;
+        --bg-element: #2a2a2a;
+        --text-default: #e0e0e0;
+        --text-muted: #aaaaaa;
+        --shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+}
