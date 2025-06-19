@@ -18,7 +18,20 @@
       </div>
       <div class="row">
         <div class="extra">Extra Space</div>
-        <div class="chart" id="chart1">Chart 1</div>
+        <div class="chart">
+          <h1 style="text-align: center">Electrical vehicle registration by US-state</h1>
+          <p style="text-align: center">Toggle between absolute and relative data</p>
+          <p style="text-align: center">Authors: Antonia Pecha, Simon Schnetzer, Leo Schweiger, Luca Troger</p>
+          <div class="dropdown-container" style="position: relative; max-width: 200px; margin: 10px auto;">
+  <select id="selection" name="tasks">
+    <option>Overview</option>
+    <option>Absolute</option>
+    <option>Relative</option>
+  </select>
+</div>
+
+          <div id="chartContainer"></div>
+        </div>
       </div>
     </section>
 
@@ -29,9 +42,351 @@
       </div>
       <div class="row">
         <div class="extra">Extra Space</div>
-        <div class="chart" id="chart2">Chart 2</div>
+        <div class="chart">
+<div class="dropdown-container">
+  <input type="text" id="stateSearch" class="search-input" placeholder="Search or select a state...">
+  <div id="stateDropdown" class="dropdown-list"></div>
+</div>
+
+          <div id="pie-chart"></div>
+          <div class="legend" id="legend"></div>
+        </div>
       </div>
     </section>
+
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script>
+  const w = 1000;
+  const h = 500;
+  const margins = { top: 50, left: 100, bottom: 100, right: 100 };
+  const innerWidth = w - margins.left - margins.right;
+  const innerHeight = h - margins.top - margins.bottom;
+  const url = "data/better data new(2).csv";
+
+  let yScaleType = "electric";
+
+  d3.csv(url).then(data => {
+    data.forEach(d => {
+      d.electric = +d.electric;
+      d.rel_electric = +d.rel_electric;
+    });
+
+    const mySelection = document.getElementById("selectMe");
+
+    const tooltip = d3.select(".chart")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("position", "absolute")
+      .style("background", "#fff")
+      .style("border", "1px solid #ccc")
+      .style("padding", "5px 10px")
+      .style("border-radius", "4px")
+      .style("pointer-events", "none")
+      .style("opacity", 0);
+
+    const selectItems = ["Overview", "Absolute", "Relative"];
+
+    d3.select(mySelection)
+      .append("span")
+      .append("select")
+      .attr("id", "selection")
+      .attr("name", "tasks")
+      .selectAll("option")
+      .data(selectItems)
+      .enter()
+      .append("option")
+      .text(d => d);
+
+    myChart();
+
+    d3.select("#selection").on("change", function () {
+      const selectedOption = d3.select(this).node().value;
+      if (selectedOption == "Absolute") {
+        data.sort((a, b) => d3.descending(a.electric, b.electric));
+        yScaleType = "electric";
+      } else if (selectedOption == "Overview") {
+        data.sort((a, b) => {
+          if (a.state === "United States") return 1;
+          if (b.state === "United States") return -1;
+          return d3.ascending(a.state, b.state);
+        });
+        yScaleType = "electric";
+      } else if (selectedOption == "Relative") {
+        data.sort((a, b) => d3.descending(a.rel_electric, b.rel_electric));
+        yScaleType = "rel_electric";
+      }
+      myChart();
+    });
+
+    function myChart() {
+      const chartContainer = document.getElementById("chartContainer");
+      chartContainer.innerHTML = "";
+
+      const svg = d3.select(chartContainer)
+        .append("svg")
+        .attr("viewBox", [0, 0, w, h]);
+
+      const mainG = svg.append("g")
+        .attr("transform", `translate(${margins.left}, ${margins.top})`);
+
+      const xScale = d3.scaleBand()
+        .domain(data.map(d => d.state))
+        .range([0, innerWidth])
+        .padding(0.05);
+
+      const yMax = d3.max(data, d => d[yScaleType]);
+      const yScale = d3.scaleLinear()
+        .domain([0, yMax]).nice()
+        .range([innerHeight, 0]);
+
+      mainG.append("g")
+        .attr("transform", `translate(0,${innerHeight})`)
+        .call(d3.axisBottom(xScale))
+        .selectAll("text")
+        .attr("transform", "rotate(-45)")
+        .style("text-anchor", "end");
+
+      mainG.append("g")
+        .call(d3.axisLeft(yScale).tickFormat(d => {
+          return yScaleType === "rel_electric"
+            ? d3.format(".1%")(d)
+            : d3.format(".1f")(d / 1_000_000) + " Mill";
+        }));
+
+      mainG.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", d => xScale(d.state))
+        .attr("y", d => yScale(d[yScaleType]))
+        .attr("width", xScale.bandwidth())
+        .attr("height", d => innerHeight - yScale(d[yScaleType]))
+        .attr("fill", d => d[yScaleType] === yMax ? "#7932FA" : "green")
+        .on("mouseover", function (event, d) {
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", 0.9);
+          tooltip.html(yScaleType === "rel_electric"
+              ? d3.format(".1%")(d[yScaleType])
+              : d3.format(",")(d[yScaleType]))
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+          d3.select(this).attr("fill", "#ff8800");
+        })
+        .on("mousemove", function (event) {
+          tooltip.style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", function (event, d) {
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+          d3.select(this).attr("fill", d => d[yScaleType] === yMax ? "#f4c430" : "green");
+        });
+    }
+  }).catch(err => console.error("Error loading CSV:", err));
+</script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+  const width = 500;
+  const height = 500;
+  const margin = 40;
+  const radius = Math.min(width, height) / 2 - margin;
+
+  const svg = d3.select('#pie-chart')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height)
+    .append('g')
+    .attr('transform', `translate(${width / 2}, ${height / 2})`);
+
+  const tooltip = d3.select('body')
+    .append('div')
+    .attr('class', 'tooltip');
+
+  const colorScale = d3.scaleOrdinal()
+    .domain(['electric', 'hybrid', 'alternativeFuels', 'combustion', 'unknown'])
+    .range(['#4CAF50', '#8BC34A', '#2196F3', '#607D8B', '#9E9E9E']);
+
+  const categoryNames = {
+    'electric': 'Electric',
+    'hybrid': 'Hybrid',
+    'alternativeFuels': 'Alternative Fuels',
+    'combustion': 'Combustion',
+    'unknown': 'Unknown'
+  };
+
+  const formatNumber = d3.format(',');
+  const formatPercent = d3.format('.2%');
+
+  let allStateData = [];
+  let currentState = 'California';
+
+  d3.csv('data/better data new(2).csv').then(data => {
+    allStateData = data;
+    const states = data.map(d => d.state).sort();
+    populateDropdown(states);
+    updateChart(currentState);
+    initializeSearch();
+  });
+
+  function populateDropdown(states) {
+    const dropdown = document.getElementById('stateDropdown');
+    dropdown.innerHTML = '';
+
+    states.forEach(state => {
+      const item = document.createElement('div');
+      item.classList.add('dropdown-item');
+      item.textContent = state;
+
+      item.addEventListener('click', function() {
+        document.getElementById('stateSearch').value = state;
+        currentState = state;
+        updateChart(state);
+        dropdown.style.display = 'none';
+        document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+
+      dropdown.appendChild(item);
+    });
+
+    // Hide dropdown initially
+    dropdown.style.display = 'none';
+  }
+
+  function initializeSearch() {
+    const searchInput = document.getElementById('stateSearch');
+    const dropdown = document.getElementById('stateDropdown');
+    searchInput.value = currentState;
+
+    searchInput.addEventListener('focus', function() {
+      dropdown.style.display = 'block';
+      showAllItems();
+    });
+
+    searchInput.addEventListener('input', function() {
+      const searchText = this.value.toLowerCase();
+      const items = dropdown.querySelectorAll('.dropdown-item');
+      let anyVisible = false;
+
+      items.forEach(item => {
+        if (item.textContent.toLowerCase().includes(searchText)) {
+          item.style.display = 'block';
+          anyVisible = true;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      dropdown.style.display = anyVisible ? 'block' : 'none';
+    });
+
+    document.addEventListener('click', function(event) {
+      if (!searchInput.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    searchInput.addEventListener('keyup', function(event) {
+      if (event.key === 'Enter') {
+        const visibleItem = Array.from(dropdown.querySelectorAll('.dropdown-item'))
+          .find(i => i.style.display !== 'none');
+        if (visibleItem) visibleItem.click();
+      }
+    });
+  }
+
+  function showAllItems() {
+    const items = document.querySelectorAll('.dropdown-item');
+    items.forEach(item => item.style.display = 'block');
+  }
+
+  function updateChart(stateName) {
+    const stateData = allStateData.find(d => d.state === stateName);
+    if (!stateData) {
+      console.error(`No data found for state: ${stateName}`);
+      return;
+    }
+
+    const pieData = [
+      { type: 'electric', value: +stateData.electric },
+      { type: 'hybrid', value: +stateData.hybrid },
+      { type: 'alternativeFuels', value: +stateData.alternativeFuels },
+      { type: 'combustion', value: +stateData.combustion },
+      { type: 'unknown', value: +stateData.unknown }
+    ];
+
+    const total = d3.sum(pieData, d => d.value);
+    pieData.forEach(d => d.percentage = d.value / total);
+
+    const pie = d3.pie().value(d => d.value).sort(null);
+    const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
+    const arcHover = d3.arc().innerRadius(0).outerRadius(radius * 1.1);
+
+    svg.selectAll('.arc').remove();
+
+    const arcs = svg.selectAll('.arc')
+      .data(pie(pieData))
+      .enter()
+      .append('g')
+      .attr('class', 'arc');
+
+    arcs.append('path')
+      .attr('d', arcGenerator)
+      .attr('fill', d => colorScale(d.data.type))
+      .attr('stroke', 'white')
+      .style('stroke-width', '2px')
+      .style('opacity', 0.8)
+      .on('mouseover', function(event, d) {
+        d3.select(this).transition().duration(200).attr('d', arcHover).style('opacity', 1);
+        tooltip.transition().duration(200).style('opacity', 0.9);
+        tooltip.html(`
+          <strong>${categoryNames[d.data.type]}</strong><br>
+          Count: ${formatNumber(d.data.value)}<br>
+          Percentage: ${formatPercent(d.data.percentage)}
+        `)
+        .style('left', (event.pageX + 10) + 'px')
+        .style('top', (event.pageY - 28) + 'px');
+      })
+      .on('mouseout', function() {
+        d3.select(this).transition().duration(200).attr('d', arcGenerator).style('opacity', 0.8);
+        tooltip.transition().duration(500).style('opacity', 0);
+      });
+
+    arcs.filter(d => d.endAngle - d.startAngle > 0.1)
+      .append('text')
+      .attr('transform', d => {
+        const pos = arcGenerator.centroid(d);
+        return `translate(${pos[0] * 1.1}, ${pos[1] * 1.1})`;
+      })
+      .style('text-anchor', 'middle')
+      .style('font-size', '12px')
+      .style('fill', 'white')
+      .style('pointer-events', 'none')
+      .text(d => d.data.percentage > 0.03 ? formatPercent(d.data.percentage) : '');
+
+    updateLegend(pieData);
+  }
+
+  function updateLegend(pieData) {
+    const legend = d3.select('#legend');
+    legend.html('');
+    const legendItems = legend.selectAll('.legend-item')
+      .data(pieData)
+      .enter()
+      .append('div')
+      .attr('class', 'legend-item');
+
+    legendItems.append('div')
+      .attr('class', 'legend-color')
+      .style('background-color', d => colorScale(d.type));
+
+    legendItems.append('div')
+      .text(d => `${categoryNames[d.type]}: ${formatNumber(d.value)} (${formatPercent(d.percentage)})`);
+  }
+</script>
+
 
   </main>
 

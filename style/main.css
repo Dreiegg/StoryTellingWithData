@@ -69,6 +69,82 @@ body {
     flex-direction: column;
     gap: var(--gap-small);
 }
+/* === Search Input & Dropdown Styles === */
+.search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 14px 20px;
+    margin: 0 auto 10px auto;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: var(--radius-small);
+    font-size: 18px;
+    font-family: 'Nunito', sans-serif;
+    box-sizing: border-box;
+}
+
+.dropdown-list {
+  position: absolute;
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-element, #fff);
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: var(--radius-small, 5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: calc(5 * 44px); /* max 5 items' height (adjust if needed) */
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  font-family: 'Nunito', sans-serif;
+  font-size: var(--font-size-body, 16px);
+  color: var(--text-default, #333);
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-hover, #f0f0f056);
+  color: var(--text-default, #000);
+}
+
+/* Optional: container for positioning */
+.dropdown-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+#selection {
+  width: 100%;
+  max-width: 200px;
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: var(--radius-small, 5px);
+  background: var(--bg-element, #fff);
+  color: var(--text-default, #333);
+  cursor: pointer;
+
+  /* Remove default arrow */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* Add custom arrow */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2210%22%20height%3D%227%22%20viewBox%3D%220%200%2010%207%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M0%200l5%207%205-7H0z%22%20fill%3D%22%23eaeaea%22/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 7px;
+}
+
+#selection:focus {
+  outline: none;
+  border-color: var(--border-focus, #2196F3);
+  box-shadow: 0 0 4px rgba(33, 150, 243, 0.5);
+}
 
 /* === Extra & Chart Boxen === */
 .extra,
@@ -78,7 +154,10 @@ body {
     border-radius: var(--radius-small);
     text-align: center;
     transition: background var(--transition-duration);
+    min-height: 200px; /* optional: ensures a minimum space for small diagrams */
+    height: auto;      /* allows height to adjust to content */
 }
+
 
 /* === Desktop: 2-Col + 1fr:2fr Verhältnis + Alternierung === */
 @media (min-width: 768px) {
