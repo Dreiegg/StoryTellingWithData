@@ -1,0 +1,42 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    padding: 1rem;
+    background-color: #f5f5f5;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Sections */
+  .sidebar,
+  .content {
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* 2-column layout on desktop */
+  @media (min-width: 768px) {
+    .container {
+      flex-direction: row;
+    }
+  
+    .sidebar {
+      flex: 1;
+    }
+  
+    .content {
+      flex: 2;
+    }
+  }
