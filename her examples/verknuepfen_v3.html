@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D3.js Linked Views Beispiel</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    .bar { fill: steelblue; cursor: pointer; }
+    .bar:hover { fill: orange; }
+    .line { fill: none; stroke: orange; stroke-width: 2;  }
+    .value-label { fill: orange; font-size: 12px; font-family: sans-serif; }
+    #value-output {
+      font-size: 38px;
+      font-family: sans-serif;
+      font-weight: bold;
+      margin: 10px 0 30px 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <svg width="600" height="300" id="bar-chart"></svg>
+
+  <!-- Externes Textfeld zur Anzeige des aktuellen Werts -->
+  <p id="value-output">Wert: <span id="value-text">-</span></p>
+
+  <svg width="600" height="300" id="line-chart"></svg>
+
+  <script>
+    const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+    const width = 600 - margin.left - margin.right;
+    const height = 300 - margin.top - margin.bottom;
+
+    const data = [
+      { category: 'A', value: 30, lineData: [1, 2, 3, 4] },
+      { category: 'B', value: 80, lineData: [2, 3, 4, 5] },
+      { category: 'C', value: 45, lineData: [3, 4, 5, 6] },
+      { category: 'D', value: 60, lineData: [4, 5, 6, 7] },
+      { category: 'E', value: 20, lineData: [5, 6, 7, 8] },
+    ];
+
+    const xBar = d3.scaleBand()
+      .domain(data.map(d => d.category))
+      .range([0, width])
+      .padding(0.1);
+
+    const yBar = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.value)])
+      .nice()
+      .range([height, 0]);
+
+    const xLine = d3.scaleLinear()
+      .domain([0, 3])
+      .range([0, width]);
+
+    const yLine = d3.scaleLinear()
+      .domain([0, 10])
+      .range([height, 0]);
+
+    const svgBar = d3.select("#bar-chart")
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const svgLine = d3.select("#line-chart")
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Balken zeichnen
+    svgBar.selectAll(".bar")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("class", "bar")
+      .attr("x", d => xBar(d.category))
+      .attr("y", d => yBar(d.value))
+      .attr("width", xBar.bandwidth())
+      .attr("height", d => height - yBar(d.value))
+    
+        .on("click", function(event, d) {
+        // Externes Textfeld aktualisieren
+        d3.select("#value-text").text(d.value + " " + d.category);
+
+        // Linie aktualisieren
+        updateLineChart(d.lineData);
+      });
+
+    // Labels hinzufügen
+   svgBar.selectAll(".value-label")
+     .data(data)
+     .enter()
+     .append("text")
+     .attr("class", "value-label")
+     .attr("x", d => xBar(d.category) + xBar.bandwidth() / 2)
+     .attr("y", d => yBar(d.value) - 5) // etwas oberhalb des Balkens
+     .attr("text-anchor", "middle")
+     .attr("fill", "black")
+     .style("font-size", "14px")
+     .text(d => d.value + " & " + d.category);
+
+    // Achsen für Balkendiagramm
+    svgBar.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(xBar));
+
+    svgBar.append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(yBar));
+
+    // Funktion: Linie aktualisieren
+    function updateLineChart(lineData) {
+      svgLine.selectAll("*").remove();
+
+      const line = d3.line()
+        .x((d, i) => xLine(i))
+        .y(d => yLine(d));
+
+      svgLine.append("path")
+        .data([lineData])
+        .attr("class", "line")
+        .attr("d", line)
+        .attr("stroke", "orange")
+        .attr("stroke-width", 2)
+        .attr("fill", "none");
+
+      svgLine.append("g")
+        .attr("class", "x-axis")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(xLine));
+
+      svgLine.append("g")
+        .attr("class", "y-axis")
+        .call(d3.axisLeft(yLine));
+    }
+
+    // Initial: Zeige erste Linie und Wert
+    updateLineChart(data[0].lineData);
+    d3.select("#value-text").text(data[0].value + data[0].category );
+  </script>
+</body>
+</html>

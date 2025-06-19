@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 Bar Chart mit Drag & Drop und Achsen</title>
+
+  <!-- D3.js Bibliothek einbinden -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <!-- Grundlegendes Styling für Balken und Achsen -->
+  <style>
+    .bar {
+      fill: steelblue;       /* Standardfarbe der Balken */
+      cursor: move;          /* Mauszeiger zeigt "bewegbar" an */
+    }
+
+    .bar.dragging {
+      fill: orange;          /* Farbe beim Ziehen */
+    }
+
+    .axis text {
+      font-size: 12px;       /* Textgröße der Achsenbeschriftung */
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;          /* Linienfarbe der Achsen */
+      shape-rendering: crispEdges;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SVG-Container für das Diagramm -->
+  <svg width="700" height="400"></svg>
+
+  <script>
+    // SVG auswählen und Maße berechnen
+    const svg = d3.select("svg");
+    const width = +svg.attr("width") - 60;
+    const height = +svg.attr("height") - 60;
+    const margin = { top: 20, right: 20, bottom: 40, left: 40 };
+
+    // Daten für das Balkendiagramm (Person + Wert)
+    let data = [
+      { person: "Anna", data: 30 },
+      { person: "Ben", data: 80 },
+      { person: "Fritz", data: 45 },
+      { person: "Betti", data: 60 },
+      { person: "Tim", data: 20 },
+      { person: "Tom", data: 90 },
+      { person: "Lilly", data: 50 }
+    ];
+
+    // X-Achse: kategorisch (Namen)
+    let x = d3.scaleBand()
+      .domain(data.map(d => d.person))     // Personen als Achsenwerte
+      .range([0, width])                   // von links nach rechts
+      .padding(0.1);                       // Abstand zwischen Balken
+
+    // Y-Achse: linear (Zahlenwerte)
+    let y = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.data)]) // Bereich von 0 bis max. Wert
+      .nice()                                  // auf runde Zahlen anpassen
+      .range([height, 0]);                     // SVG hat (0,0) oben links
+
+    // Hauptgruppe für das Diagramm (verschoben um den Rand)
+    const g = svg.append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Gruppen für X- und Y-Achse
+    const xAxisGroup = g.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .attr("class", "axis");
+
+    const yAxisGroup = g.append("g")
+      .attr("class", "axis");
+
+    // Achsenfunktionen (werden später aufgerufen)
+    const xAxis = () => d3.axisBottom(x);
+    const yAxis = () => d3.axisLeft(y);
+
+    // Funktion zum Zeichnen/Aktualisieren des Diagramms
+    const render = () => {
+      // Skalen aktualisieren (wichtig bei Drag & Drop)
+      x.domain(data.map(d => d.person));
+      y.domain([0, d3.max(data, d => d.data)]).nice();
+
+      // Daten an Balken binden
+      const bars = g.selectAll(".bar").data(data, d => d.person);
+
+      // Neue Balken erstellen
+      bars.enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", d => x(d.person))              // X-Position
+        .attr("y", d => y(d.data))                // Y-Position (oben)
+        .attr("width", x.bandwidth())             // Breite pro Kategorie
+        .attr("height", d => height - y(d.data))  // Höhe relativ zur Skala
+        .call(drag)                               // Drag-Verhalten zuweisen
+        .merge(bars)                              // Neue + existierende Balken
+        .transition()
+        .duration(300)                            // Animation
+        .attr("x", d => x(d.person))
+        .attr("y", d => y(d.data))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.data));
+
+      // Alte (nicht mehr vorhandene) Balken entfernen
+      bars.exit().remove();
+
+      // Achsen anzeigen oder aktualisieren
+      xAxisGroup.transition().duration(300).call(xAxis());
+      yAxisGroup.transition().duration(300).call(yAxis());
+    };
+
+    // Drag-Verhalten definieren
+    const drag = d3.drag()
+      .on("start", function (event, d) {
+        // Beim Start: Balken hervorheben
+        d3.select(this).classed("dragging", true);
+        // Ursprüngliche Position im Array speichern
+        this.initialIndex = data.findIndex(item => item.person === d.person);
+      })
+      .on("drag", function (event, d) {
+        // Beim Ziehen: X-Position des Balkens anpassen (visuell)
+        let limitedX = Math.max(0, Math.min(event.x - margin.left, width - x.bandwidth()));
+        d3.select(this).attr("x", limitedX);
+      })
+      .on("end", function (event, d) {
+        // Nach dem Ziehen: Balken zurücksetzen
+        //d3.select(this).classed("dragging", false);
+
+        // Neue Position berechnen
+        const draggedX = event.x - margin.left;
+        let newIndex = Math.floor(draggedX / x.step()); // neue Indexposition
+        newIndex = Math.max(0, Math.min(newIndex, data.length - 1)); // Begrenzen
+
+        // Vergleich mit alter Position
+        const oldIndex = this.initialIndex;
+        if (newIndex !== oldIndex) {
+          // Element verschieben im Datenarray
+          const moved = data.splice(oldIndex, 1)[0];
+          data.splice(newIndex, 0, moved);
+        }
+
+        // Diagramm neu rendern
+        render();
+      });
+
+    // Erstes Rendern des Diagramms
+    render();
+  </script>
+</body>
+</html>
