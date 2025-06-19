@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vehicle Types in California</title>
-    <style>
+    <title>Vehicle Types in California</title>    <style>
         body {
             font-family: 'Nunito', Arial, sans-serif;
             margin: 0;
@@ -19,6 +18,61 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .state-selector {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 30px auto;
+            position: relative;
+        }
+        
+        .search-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+            font-family: 'Nunito', Arial, sans-serif;
+        }
+        
+        .search-input:focus {
+            border-color: #2196F3;
+        }
+        
+        .dropdown-list {
+            display: none;
+            position: absolute;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dropdown-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .dropdown-item.selected {
+            background-color: #e3f2fd;
         }
         
         h1 {
@@ -70,9 +124,16 @@
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Vehicle Types Distribution in California</h1>
+<body>    <div class="container">
+        <h1>Vehicle Types Distribution by State</h1>
+        
+        <div class="state-selector">
+            <div class="search-container">
+                <input type="text" id="stateSearch" class="search-input" placeholder="Search or select a state...">
+                <div id="stateDropdown" class="dropdown-list"></div>
+            </div>
+        </div>
+        
         <div class="chart-container">
             <div id="pie-chart"></div>
             <div class="legend" id="legend"></div>
@@ -81,8 +142,7 @@
 
     <!-- Load D3.js -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    
-    <script>
+      <script>
         // Set dimensions and margins for the chart
         const width = 500;
         const height = 500;
@@ -118,25 +178,142 @@
             'unknown': 'Unknown'
         };
         
+        // Format numbers with commas
+        const formatNumber = d3.format(',');
+        
+        // Format percentages
+        const formatPercent = d3.format('.2%');
+        
+        // Variable to store all data
+        let allStateData = [];
+        let currentState = 'California'; // Default state
+        
         // Load the data
         d3.csv('data/better data new(2).csv').then(function(data) {
-            // Filter for California
-            const californiaData = data.find(d => d.state === 'California');
+            // Store all data
+            allStateData = data;
+            
+            // Get all state names and sort them alphabetically
+            const states = data.map(d => d.state).sort();
+            
+            // Populate the dropdown
+            populateDropdown(states);
+            
+            // Initialize the chart with the default state
+            updateChart(currentState);
+            
+            // Initialize the search functionality
+            initializeSearch();
+        });
+        
+        // Function to populate the dropdown with states
+        function populateDropdown(states) {
+            const dropdown = document.getElementById('stateDropdown');
+            
+            // Add each state to the dropdown
+            states.forEach(state => {
+                const item = document.createElement('div');
+                item.classList.add('dropdown-item');
+                item.textContent = state;
+                
+                // Mark the default state as selected
+                if (state === currentState) {
+                    item.classList.add('selected');
+                }
+                
+                // Add click event to update the chart
+                item.addEventListener('click', function() {
+                    // Update the search input with the selected state
+                    document.getElementById('stateSearch').value = state;
+                    
+                    // Update the current state
+                    currentState = state;
+                    
+                    // Update the chart
+                    updateChart(state);
+                    
+                    // Hide the dropdown
+                    dropdown.style.display = 'none';
+                    
+                    // Update selected class
+                    document.querySelectorAll('.dropdown-item').forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+                
+                dropdown.appendChild(item);
+            });
+        }
+        
+        // Function to initialize the search functionality
+        function initializeSearch() {
+            const searchInput = document.getElementById('stateSearch');
+            const dropdown = document.getElementById('stateDropdown');
+            
+            // Set the default value
+            searchInput.value = currentState;
+            
+            // Show dropdown when input is focused
+            searchInput.addEventListener('focus', function() {
+                dropdown.style.display = 'block';
+            });
+            
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!searchInput.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            
+            // Filter states when typing
+            searchInput.addEventListener('input', function() {
+                const searchText = this.value.toLowerCase();
+                const items = dropdown.querySelectorAll('.dropdown-item');
+                
+                items.forEach(item => {
+                    const stateName = item.textContent.toLowerCase();
+                    if (stateName.includes(searchText)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Show the dropdown when typing
+                dropdown.style.display = 'block';
+            });
+            
+            // Allow selecting with Enter key
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    // Find the first visible state
+                    const visibleItem = dropdown.querySelector('.dropdown-item[style="display: block"]');
+                    if (visibleItem) {
+                        visibleItem.click();
+                    }
+                }
+            });
+        }
+        
+        // Function to update the chart based on state selection
+        function updateChart(stateName) {
+            // Find the selected state data
+            const stateData = allStateData.find(d => d.state === stateName);
+            
+            if (!stateData) {
+                console.error(`No data found for state: ${stateName}`);
+                return;
+            }
             
             // Format the data for the pie chart
             const pieData = [
-                { type: 'electric', value: +californiaData.electric },
-                { type: 'hybrid', value: +californiaData.hybrid },
-                { type: 'alternativeFuels', value: +californiaData.alternativeFuels },
-                { type: 'combustion', value: +californiaData.combustion },
-                { type: 'unknown', value: +californiaData.unknown }
+                { type: 'electric', value: +stateData.electric },
+                { type: 'hybrid', value: +stateData.hybrid },
+                { type: 'alternativeFuels', value: +stateData.alternativeFuels },
+                { type: 'combustion', value: +stateData.combustion },
+                { type: 'unknown', value: +stateData.unknown }
             ];
-            
-            // Format numbers with commas
-            const formatNumber = d3.format(',');
-            
-            // Format percentages
-            const formatPercent = d3.format('.2%');
             
             // Compute the percentage for each category
             const total = d3.sum(pieData, d => d.value);
@@ -159,6 +336,9 @@
                 .innerRadius(0)
                 .outerRadius(radius * 1.1);
             
+            // Remove existing chart elements for transition
+            svg.selectAll('.arc').remove();
+            
             // Join the data with pie generator
             const arcs = svg.selectAll('arc')
                 .data(pie(pieData))
@@ -166,7 +346,7 @@
                 .append('g')
                 .attr('class', 'arc');
             
-            // Draw the paths (pie slices)
+            // Draw the paths (pie slices) with transition
             arcs.append('path')
                 .attr('d', arcGenerator)
                 .attr('fill', d => colorScale(d.data.type))
@@ -224,9 +404,18 @@
                 .style('pointer-events', 'none')
                 .text(d => d.data.percentage > 0.03 ? formatPercent(d.data.percentage) : '');
             
-            // Add a legend
+            // Update the legend
+            updateLegend(pieData);
+        }
+        
+        // Function to update the legend
+        function updateLegend(pieData) {
             const legend = d3.select('#legend');
             
+            // Clear existing legend items
+            legend.html('');
+            
+            // Add new legend items
             const legendItems = legend.selectAll('.legend-item')
                 .data(pieData)
                 .enter()
@@ -239,7 +428,8 @@
             
             legendItems.append('div')
                 .text(d => `${categoryNames[d.type]}: ${formatNumber(d.value)} (${formatPercent(d.percentage)})`);
-        });
+        }
+    </script>
     </script>
 </body>
 </html>
