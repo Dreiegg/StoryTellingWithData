@@ -150,7 +150,20 @@ body {
 }
 
 /* === Extra & Chart Boxen === */
-.extra,
+.extra {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.extra img {
+    max-width: 80%;
+    height: auto;
+    margin-bottom: var(--gap-small);
+}
+
+/* .extra, */
 .chart {
     background: var(--bg-element);
     padding: var(--padding-default);
