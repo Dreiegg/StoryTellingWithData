@@ -1,3 +1,4 @@
+/* style/variables.css */
 :root {
     /* === Farben === */
     --bg-body: #f5f5f5;
@@ -5,6 +6,21 @@
     --bg-element: #eaeaea;
     --text-default: #333333;
     --text-muted: #555555;
+    --border-color: #cccccc;
+    --border-focus: #2196F3;
+    --bg-hover: rgba(240, 240, 240, 0.34);
+
+    /* === Chart-Farben Story 1 (Balken) === */
+    --bar-color: #4E79A7;         /* Standard-Bar */
+    --bar-highlight: #F28E2B;     /* Hervorgehoben */
+    --bar-hover: #E15759;         /* Hover-Zustand */
+
+    /* === Chart-Farben Story 2 (Tortendiagramm) === */
+    --pie-electric: #3E95CD;
+    --pie-hybrid: #8E5EA2;
+    --pie-altfuels: #3CBA9F;
+    --pie-combustion: #EFC000;
+    --pie-unknown: #F35B3F;
 
     /* === Schatten === */
     --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -15,6 +31,9 @@
     --padding-default: 1rem;
     --gap-small: 1rem;
     --gap-large: 2rem;
+    --max-width-input: 400px;
+    --max-width-dropdown: 400px;
+    --max-width-selection: 200px;
 
     /* === Schrift === */
     --font-family: 'Nunito', sans-serif;
