@@ -115,6 +115,8 @@
       color: var(--text-default);
       padding: 0.5rem;
       border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: background-color 0.2s ease;
     }
 
     .dropdown-item:hover {
@@ -139,6 +141,14 @@
 
     .pie-chart-container {
       margin-top: 1rem;
+    }
+
+    /* Enhanced tooltip styling */
+    .tooltip strong {
+      color: var(--accent-blue);
+      font-size: 1.1em;
+      display: block;
+      margin-bottom: 0.3rem;
     }
   </style>
 </head>
@@ -236,18 +246,18 @@
       data.forEach(d => {
         d.electric = +d.electric;
         d.rel_electric = +d.rel_electric;
-      });
-
-      const tooltip = d3.select(".chart")
+      });      const tooltip = d3.select(".chart")
         .append("div")
         .attr("class", "tooltip")
         .style("position", "absolute")
         .style("background", "var(--bg-element)")
-        .style("border", "1px solid var(--border-color)")
-        .style("padding", "0.5rem")
+        .style("border", "1px solid var(--accent-blue)")
+        .style("padding", "0.75rem")
         .style("border-radius", "var(--radius-small)")
         .style("opacity", 0)
-        .style("pointer-events", "none");
+        .style("pointer-events", "none")
+        .style("min-width", "150px")
+        .style("box-shadow", "0 2px 5px rgba(0,0,0,0.2)");
 
       let yType = "electric";
       const select = d3.select("#selection");
@@ -301,14 +311,13 @@
             d[yType] === yMax
               ? "var(--bar-highlight)"
               : "var(--bar-color)"
-          )
-          .on("mouseover", function (event, d) {
+          )          .on("mouseover", function (event, d) {
             tooltip.transition().duration(200).style("opacity", 0.9);
-            tooltip.html(
-              yType === "rel_electric"
-                ? d3.format(".1%")(d[yType])
-                : d3.format(",")(d[yType])
-            )
+            tooltip.html(`
+              <strong>${d.state}</strong><br>
+              ${d3.format(",")(d.electric)}<br>
+              ${d3.format(".2%")(d.rel_electric)} of vehicles
+            `)
               .style("left", event.pageX + 10 + "px")
               .style("top", event.pageY - 28 + "px");
             d3.select(this).attr("fill", "var(--bar-hover)");
@@ -407,9 +416,11 @@
           // If the dropdown is hidden, show it when typing
           if (dd.style('display') === 'none') {
             dd.style('display', 'block');
-          }
-          dd.selectAll('.dropdown-item')
-            .style('display', d => d3.select(d3.select(this).node()).text().toLowerCase().includes(txt) ? 'block' : 'none');
+          }          dd.selectAll('.dropdown-item')
+            .style('display', function() {
+              const itemText = d3.select(this).text().toLowerCase();
+              return itemText.includes(txt) ? 'block' : 'none';
+            });
         });
         d3.select(document).on('click', e => {
           if (!inpt.node().contains(e.target) && !dd.node().contains(e.target))
@@ -441,7 +452,7 @@
           .on('mouseover', (e, d) => {
             tooltipPie.transition().duration(200).style('opacity', 0.9);
             tooltipPie.html(`<strong>${categoryNames[d.data.type]}</strong><br>
-              Count: ${d.data.value.toLocaleString()}<br>
+              ${d.data.value.toLocaleString()}<br>
               ${(d.data.percent).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 })}
             `)
               .style('left', e.pageX + 10 + 'px')
