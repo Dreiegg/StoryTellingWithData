@@ -141,9 +141,11 @@
 
     .pie-chart-container {
       margin-top: 1rem;
+    }    /* Enhanced tooltip styling */
+    .tooltip {
+      text-align: center;
     }
-
-    /* Enhanced tooltip styling */
+    
     .tooltip strong {
       color: var(--accent-blue);
       font-size: 1.1em;
@@ -313,10 +315,24 @@
               : "var(--bar-color)"
           )          .on("mouseover", function (event, d) {
             tooltip.transition().duration(200).style("opacity", 0.9);
+            
+            // Create German-style number format with dot for thousands and no decimal for integers
+            const numberFormatter = new Intl.NumberFormat('de-DE', { 
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+            });
+            
+            // Create German-style percent format with comma for decimal
+            const percentFormatter = new Intl.NumberFormat('de-DE', { 
+              style: 'percent', 
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            });
+            
             tooltip.html(`
               <strong>${d.state}</strong><br>
-              ${d3.format(",")(d.electric)}<br>
-              ${d3.format(".2%")(d.rel_electric)} of vehicles
+              ${numberFormatter.format(d.electric)} EVs<br>
+              ${percentFormatter.format(d.rel_electric)} of vehicles
             `)
               .style("left", event.pageX + 10 + "px")
               .style("top", event.pageY - 28 + "px");
@@ -352,18 +368,18 @@
       .attr('viewBox', `0 0 ${width} ${height}`)
       .attr('preserveAspectRatio', 'xMidYMid meet')
       .append('g')
-      .attr('transform', `translate(${width / 2},${height / 2})`);
-
-    const tooltipPie = d3.select('body')
+      .attr('transform', `translate(${width / 2},${height / 2})`);    const tooltipPie = d3.select('body')
       .append('div')
       .attr('class', 'tooltip')
       .style('position', 'absolute')
       .style('background', 'var(--bg-element)')
-      .style('border', '1px solid var(--border-color)')
-      .style('padding', '0.5rem')
+      .style('border', '1px solid var(--accent-blue)')
+      .style('padding', '0.75rem')
       .style('border-radius', 'var(--radius-small)')
       .style('opacity', 0)
-      .style('pointer-events', 'none'); const colorScale = d3.scaleOrdinal()
+      .style('pointer-events', 'none')
+      .style('min-width', '150px')
+      .style('box-shadow', '0 2px 5px rgba(0,0,0,0.2)');const colorScale = d3.scaleOrdinal()
         .domain(['electric', 'hybrid', 'alternativeFuels', 'combustion', 'unknown'])
         .range([
           'var(--accent-blue)',
@@ -448,12 +464,26 @@
 
         arcs.append('path')
           .attr('d', arcGen)
-          .attr('fill', d => colorScale(d.data.type))
-          .on('mouseover', (e, d) => {
+          .attr('fill', d => colorScale(d.data.type))          .on('mouseover', (e, d) => {
             tooltipPie.transition().duration(200).style('opacity', 0.9);
-            tooltipPie.html(`<strong>${categoryNames[d.data.type]}</strong><br>
-              ${d.data.value.toLocaleString()}<br>
-              ${(d.data.percent).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 })}
+            
+            // Create German-style number format with dot for thousands and no decimal for integers
+            const numberFormatter = new Intl.NumberFormat('de-DE', { 
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+            });
+            
+            // Create German-style percent format with comma for decimal
+            const percentFormatter = new Intl.NumberFormat('de-DE', { 
+              style: 'percent', 
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            });
+            
+            tooltipPie.html(`
+              <strong>${categoryNames[d.data.type]}</strong><br>
+              ${numberFormatter.format(d.data.value)}<br>
+              ${percentFormatter.format(d.data.percent)}
             `)
               .style('left', e.pageX + 10 + 'px')
               .style('top', e.pageY - 28 + 'px');
@@ -462,17 +492,28 @@
           .on('mouseout', (e, d) => {
             tooltipPie.transition().duration(500).style('opacity', 0);
             d3.select(e.currentTarget).transition().duration(200).attr('d', arcGen);
-          });
-
-        // Legend
+          });        // Legend
         const legend = d3.select('#legend').html('');
+          // Create German-style number format with dot for thousands and no decimal for integers
+        const numberFormatter = new Intl.NumberFormat('de-DE', { 
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        });
+        
+        // Create German-style percent format with comma for decimal
+        const percentFormatter = new Intl.NumberFormat('de-DE', { 
+          style: 'percent', 
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+        
         pieData.forEach(d => {
           const item = legend.append('div').attr('class', 'legend-item');
           item.append('div')
             .attr('class', 'legend-color')
             .style('background-color', colorScale(d.type));
           item.append('div')
-            .text(`${categoryNames[d.type]}: ${d.value.toLocaleString()} (${(d.percent).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 })})`);
+            .text(`${categoryNames[d.type]}: ${numberFormatter.format(d.value)} (${percentFormatter.format(d.percent)})`);
         });
       }
     });
