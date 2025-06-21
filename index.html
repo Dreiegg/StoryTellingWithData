@@ -1,9 +1,10 @@
 <!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF      <div class="example-text" style="color: var(--text-default); line-height: 1.6;">Across the United States, there are now 3,555,900 electric vehicles - a strong indicator of the country's advancing transition towards cleaner transportation. California leads the way, both in absolute numbers and in electric vehicles per capita. Looking beyond the top-line figures, states like Hawaii and Nevada demonstrate how regions with mid-range total counts are making remarkable strides in electric vehicle adoption relative to their populations.</div>8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Storytelling with Data</title>
   <link rel="stylesheet" href="style/reset.css" />
   <link rel="stylesheet" href="style/variables.css" />
@@ -18,17 +19,17 @@
       --text-default: #ffffff;
       --text-muted: #cccccc;
       --border-color: #444444;
-      
+
       /* Accent colors */
       --accent-blue: #67c7ff;
       --accent-blue-light: #8bffe6;
       --accent-green: #33cc99;
-      
+
       /* Chart colors */
       --bar-color: var(--accent-blue);
       --bar-highlight: var(--accent-green);
       --bar-hover: var(--accent-blue-light);
-      
+
       /* Pie chart colors */
       --pie-electric: var(--accent-blue);
       --pie-hybrid: var(--accent-blue-light);
@@ -36,131 +37,161 @@
       --pie-combustion: #8a8a8a;
       --pie-unknown: #4d4d4d;
     }
-    
+
     /* Additional styles */
     a {
       color: var(--accent-blue);
       text-decoration: none;
       transition: color 0.3s;
     }
-    
+
     a:hover {
       color: var(--accent-blue-light);
       text-decoration: underline;
     }
-    
+
     .story {
       color: var(--accent-blue);
       font-weight: bold;
     }
-    
-    h1, h2, h3 {
+
+    h1,
+    h2,
+    h3 {
       color: var(--text-default);
     }
-    
-    select, .search-input {
+
+    select,
+    .search-input {
       background-color: var(--bg-element);
       color: var(--text-default);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-small);
     }
-    
-    select:focus, .search-input:focus {
+
+    select:focus,
+    .search-input:focus {
       border-color: var(--accent-blue);
     }
-    
+
     .tooltip {
       background: var(--bg-element) !important;
       color: var(--text-default) !important;
       border: 1px solid var(--accent-blue) !important;
     }
-    
+
     /* Additional custom styles for this page */
     .story-block {
       background-color: var(--bg-block);
       border: 1px solid var(--border-color);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
-    
+
     .row {
       display: flex;
       flex-wrap: wrap;
       gap: 2rem;
     }
-    
+
     .extra {
       flex: 1;
       min-width: 250px;
     }
-    
+
     .chart {
       flex: 2;
       min-width: 300px;
     }
-    
+
     .legend-item {
       color: var(--text-default);
     }
-    
+
     /* Style for dropdown items */
     .dropdown-item {
       color: var(--text-default);
       padding: 0.5rem;
       border-bottom: 1px solid var(--border-color);
     }
-    
+
     .dropdown-item:hover {
       background-color: var(--accent-blue);
       color: white;
     }
   </style>
 </head>
+
 <body>
   <main class="container">
 
     <!-- Story 1: Balkendiagramm -->
     <section class="story-block">
-      <div class="story" style="color: var(--accent-blue); font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">E-Vehicles by State</div>
-      <div class="example-text">Across the United States, there are now 3,555,900 electric vehicles - a strong indicator of the country’s advancing transition towards cleaner transportation. California leads the way, both in absolute numbers and in electric vehicles per capita. Looking beyond the top-line figures, states like Hawaii and Nevada demonstrate how regions with mid-range total counts are making remarkable strides in electric vehicle adoption relative to their populations.</div>
+      <div class="story"
+        style="color: var(--accent-blue); font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">E-Vehicles by
+        State</div>
+      <div class="example-text">Across the United States, there are now 3,555,900 electric vehicles - a strong indicator
+        of the country’s advancing transition towards cleaner transportation. California leads the way, both in absolute
+        numbers and in electric vehicles per capita. Looking beyond the top-line figures, states like Hawaii and Nevada
+        demonstrate how regions with mid-range total counts are making remarkable strides in electric vehicle adoption
+        relative to their populations.</div>
       <div class="row">
         <div class="extra">
           <!-- This view highlights the difference between the absolute number of vehicles and the count relative to population. Use the controls to flip through the states - take a moment to check out your favorite state and see where it ranks in both measures! -->
-          <img src="car-illustration1.png" alt="Decorative car illustration" style="max-width: 100%; height: auto; display: block; margin-bottom: 0.5rem;">
+          <img src="car-illustration1.png" alt="Decorative car illustration"
+            style="max-width: 100%; height: auto; display: block; margin-bottom: 0.5rem;">
 
         </div>
-        
-          <div class="chart">          <h1 style="text-align: center; color: var(--accent-blue);">Electrical vehicle registration by US-state</h1>
+
+        <div class="chart">
+          <h1 style="text-align: center; color: var(--accent-blue);">Electrical vehicle registration by US-state</h1>
           <p style="text-align: center; color: var(--text-default);">Toggle between absolute and relative data</p>
-          <p style="text-align: center; color: var(--text-muted);">Authors: …</p>          <div class="dropdown-container" style="max-width: var(--max-width-selection); margin: 1rem auto;">
-            <select id="selection" style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem;">
+          <p style="text-align: center; color: var(--text-muted);">Authors: …</p>
+          <div class="dropdown-container" style="max-width: var(--max-width-selection); margin: 1rem auto;">
+            <select id="selection"
+              style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem;">
               <option>Overview</option>
               <option>Absolute</option>
               <option>Relative</option>
             </select>
           </div>
           <div id="chartContainer"></div>
-          <p style="text-align: right; font-size: 0.8rem; margin-top: 0.5rem; color: var(--text-muted);">Source: <a href="https://afdc.energy.gov/vehicle-registration?year=2023" target="_blank">Alternative Fuels Data Center - Vehicle Registration Counts (2023)</a></p>
+          <p style="text-align: right; font-size: 0.8rem; margin-top: 0.5rem; color: var(--text-muted);">Source: <a
+              href="https://afdc.energy.gov/vehicle-registration?year=2023" target="_blank">Alternative Fuels Data
+              Center - Vehicle Registration Counts (2023)</a></p>
         </div>
       </div>
     </section>
 
     <!-- Story 2: Tortendiagramm -->
     <section class="story-block">
-      <div class="story" style="color: var(--accent-blue); font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">How does your state cut it?</div>
-      <div class="example-text" style="color: var(--text-default); line-height: 1.6;">The following chart highlights the current composition of vehicle types across all states. Combustion-engine vehicles still make up the largest share by a wide margin. However, electric vehicles have seen consistent growth over the years and are steadily becoming a more significant part of the fleet. While combustion remains dominant for now, the shift towards electric mobility is clearly underway, signaling promising progress.</div>
+      <div class="story"
+        style="color: var(--accent-blue); font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">How does your
+        state cut it?</div>
+      <div class="example-text" style="color: var(--text-default); line-height: 1.6;">The following chart highlights the
+        current composition of vehicle types across all states. Combustion-engine vehicles still make up the largest
+        share by a wide margin. However, electric vehicles have seen consistent growth over the years and are steadily
+        becoming a more significant part of the fleet. While combustion remains dominant for now, the shift towards
+        electric mobility is clearly underway, signaling promising progress.</div>
       <div class="row">
         <div class="extra">
           <!-- This chart shows the distribution of engine types. Use the search bar to explore different states and see how the numbers vary. You can also hover over the chart sections to get more detailed information about each category. -->
-          <img src="car-illustration2.png" alt="Decorative car illustration" style="max-width: 100%; height: auto; display: block; margin-bottom: 0.5rem; ">
+          <img src="car-illustration2.png" alt="Decorative car illustration"
+            style="max-width: 100%; height: auto; display: block; margin-bottom: 0.5rem; ">
 
-</div>
-        <div class="chart">          <div class="dropdown-container" style="max-width: var(--max-width-dropdown); margin: 0 auto var(--gap-small);">
-            <input type="text" id="stateSearch" class="search-input" placeholder="Search or select a state..." style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem; width: 100%; border-radius: var(--radius-small);">
-            <div id="stateDropdown" class="dropdown-list" style="background-color: var(--bg-element); border: 1px solid var(--accent-blue);"></div>
+        </div>
+        <div class="chart">
+          <div class="dropdown-container"
+            style="max-width: var(--max-width-dropdown); margin: 0 auto var(--gap-small);">
+            <input type="text" id="stateSearch" class="search-input" placeholder="Search or select a state..."
+              style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem; width: 100%; border-radius: var(--radius-small);">
+            <div id="stateDropdown" class="dropdown-list"
+              style="background-color: var(--bg-element); border: 1px solid var(--accent-blue);"></div>
           </div>
           <div id="pie-chart"></div>
           <div class="legend" id="legend"></div>
-          <p style="text-align: right; font-size: 0.8rem; margin-top: 0.5rem; color: var(--text-muted);">Source: <a href="https://afdc.energy.gov/vehicle-registration?year=2023" target="_blank">Alternative Fuels Data Center - Vehicle Registration Counts (2023)</a></p>
+          <p style="text-align: right; font-size: 0.8rem; margin-top: 0.5rem; color: var(--text-muted);">Source: <a
+              href="https://afdc.energy.gov/vehicle-registration?year=2023" target="_blank">Alternative Fuels Data
+              Center - Vehicle Registration Counts (2023)</a></p>
         </div>
       </div>
     </section>
@@ -171,7 +202,7 @@
   <script>
     // --- Story 1: Balkendiagramm ---
     const w = 1000, h = 500;
-    const margins = { top:50, left:100, bottom:100, right:100 };
+    const margins = { top: 50, left: 100, bottom: 100, right: 100 };
     const innerW = w - margins.left - margins.right;
     const innerH = h - margins.top - margins.bottom;
     d3.csv("data/better data new(2).csv").then(data => {
@@ -182,91 +213,91 @@
 
       const tooltip = d3.select(".chart")
         .append("div")
-        .attr("class","tooltip")
-        .style("position","absolute")
-        .style("background","var(--bg-element)")
-        .style("border","1px solid var(--border-color)")
-        .style("padding","0.5rem")
-        .style("border-radius","var(--radius-small)")
-        .style("opacity",0)
-        .style("pointer-events","none");
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("background", "var(--bg-element)")
+        .style("border", "1px solid var(--border-color)")
+        .style("padding", "0.5rem")
+        .style("border-radius", "var(--radius-small)")
+        .style("opacity", 0)
+        .style("pointer-events", "none");
 
       let yType = "electric";
       const select = d3.select("#selection");
       select.on("change", () => {
         const v = select.node().value;
-        if (v==="Absolute")       { data.sort((a,b)=>d3.descending(a.electric,b.electric)); yType="electric"; }
-        else if (v==="Relative")  { data.sort((a,b)=>d3.descending(a.rel_electric,b.rel_electric)); yType="rel_electric"; }
-        else                       { data.sort((a,b)=>d3.ascending(a.state,b.state)); yType="electric"; }
+        if (v === "Absolute") { data.sort((a, b) => d3.descending(a.electric, b.electric)); yType = "electric"; }
+        else if (v === "Relative") { data.sort((a, b) => d3.descending(a.rel_electric, b.rel_electric)); yType = "rel_electric"; }
+        else { data.sort((a, b) => d3.ascending(a.state, b.state)); yType = "electric"; }
         drawChart();
       });
 
-      function drawChart(){
+      function drawChart() {
         const container = d3.select("#chartContainer").html("");
         const svg = container.append("svg")
-          .attr("viewBox",[0,0,w,h]);
+          .attr("viewBox", [0, 0, w, h]);
         const g = svg.append("g")
-          .attr("transform",`translate(${margins.left},${margins.top})`);
+          .attr("transform", `translate(${margins.left},${margins.top})`);
 
         const x = d3.scaleBand()
-          .domain(data.map(d=>d.state))
-          .range([0,innerW])
+          .domain(data.map(d => d.state))
+          .range([0, innerW])
           .padding(0.05);
-        const yMax = d3.max(data,d=>d[yType]);
+        const yMax = d3.max(data, d => d[yType]);
         const y = d3.scaleLinear()
-          .domain([0,yMax]).nice()
-          .range([innerH,0]);
+          .domain([0, yMax]).nice()
+          .range([innerH, 0]);
 
         g.append("g")
-          .attr("transform",`translate(0,${innerH})`)
+          .attr("transform", `translate(0,${innerH})`)
           .call(d3.axisBottom(x))
           .selectAll("text")
-          .attr("transform","rotate(-45)")
-          .style("text-anchor","end");
+          .attr("transform", "rotate(-45)")
+          .style("text-anchor", "end");
 
         g.append("g")
-          .call(d3.axisLeft(y).tickFormat(d=> 
-            yType==="rel_electric"
+          .call(d3.axisLeft(y).tickFormat(d =>
+            yType === "rel_electric"
               ? d3.format(".1%")(d)
-              : d3.format(".1f")(d/1_000_000)+" Mill"
+              : d3.format(".1f")(d / 1_000_000) + " Mill"
           ));
 
         g.selectAll("rect")
           .data(data)
           .enter()
           .append("rect")
-            .attr("x",d=>x(d.state))
-            .attr("y",d=>y(d[yType]))
-            .attr("width",x.bandwidth())
-            .attr("height",d=>innerH-y(d[yType]))
-            .attr("fill", d=> 
-              d[yType]===yMax 
-                ? "var(--bar-highlight)" 
-                : "var(--bar-color)"
+          .attr("x", d => x(d.state))
+          .attr("y", d => y(d[yType]))
+          .attr("width", x.bandwidth())
+          .attr("height", d => innerH - y(d[yType]))
+          .attr("fill", d =>
+            d[yType] === yMax
+              ? "var(--bar-highlight)"
+              : "var(--bar-color)"
+          )
+          .on("mouseover", function (event, d) {
+            tooltip.transition().duration(200).style("opacity", 0.9);
+            tooltip.html(
+              yType === "rel_electric"
+                ? d3.format(".1%")(d[yType])
+                : d3.format(",")(d[yType])
             )
-            .on("mouseover", function(event,d){
-              tooltip.transition().duration(200).style("opacity",0.9);
-              tooltip.html(
-                yType==="rel_electric" 
-                  ? d3.format(".1%")(d[yType]) 
-                  : d3.format(",")(d[yType])
-              )
-              .style("left", event.pageX+10+"px")
-              .style("top",  event.pageY-28+"px");
-              d3.select(this).attr("fill","var(--bar-hover)");
-            })
-            .on("mousemove", event=>{
-              tooltip.style("left", event.pageX+10+"px")
-                     .style("top",  event.pageY-28+"px");
-            })
-            .on("mouseout", function(event,d){
-              tooltip.transition().duration(500).style("opacity",0);
-              d3.select(this).attr("fill", 
-                d[yType]===yMax 
-                  ? "var(--bar-highlight)" 
-                  : "var(--bar-color)"
-              );
-            });
+              .style("left", event.pageX + 10 + "px")
+              .style("top", event.pageY - 28 + "px");
+            d3.select(this).attr("fill", "var(--bar-hover)");
+          })
+          .on("mousemove", event => {
+            tooltip.style("left", event.pageX + 10 + "px")
+              .style("top", event.pageY - 28 + "px");
+          })
+          .on("mouseout", function (event, d) {
+            tooltip.transition().duration(500).style("opacity", 0);
+            d3.select(this).attr("fill",
+              d[yType] === yMax
+                ? "var(--bar-highlight)"
+                : "var(--bar-color)"
+            );
+          });
       }
 
       drawChart();
@@ -278,32 +309,32 @@
   <script>
     // --- Story 2: Tortendiagramm ---
     const width = 500, height = 500, margin = 40;
-    const radius = Math.min(width, height)/2 - margin;
+    const radius = Math.min(width, height) / 2 - margin;
     const svgPie = d3.select('#pie-chart')
       .append('svg')
-        .attr('width',width)
-        .attr('height',height)
+      .attr('width', width)
+      .attr('height', height)
       .append('g')
-        .attr('transform',`translate(${width/2},${height/2})`);
+      .attr('transform', `translate(${width / 2},${height / 2})`);
 
     const tooltipPie = d3.select('body')
       .append('div')
-      .attr('class','tooltip')
-      .style('position','absolute')
-      .style('background','var(--bg-element)')
-      .style('border','1px solid var(--border-color)')
-      .style('padding','0.5rem')
-      .style('border-radius','var(--radius-small)')
-      .style('opacity',0)
-      .style('pointer-events','none');    const colorScale = d3.scaleOrdinal()
-      .domain(['electric','hybrid','alternativeFuels','combustion','unknown'])
-      .range([
-        'var(--accent-blue)',
-        'var(--accent-blue-light)',
-        'var(--accent-green)',
-        'var(--pie-combustion)',
-        'var(--pie-unknown)'
-      ]);
+      .attr('class', 'tooltip')
+      .style('position', 'absolute')
+      .style('background', 'var(--bg-element)')
+      .style('border', '1px solid var(--border-color)')
+      .style('padding', '0.5rem')
+      .style('border-radius', 'var(--radius-small)')
+      .style('opacity', 0)
+      .style('pointer-events', 'none'); const colorScale = d3.scaleOrdinal()
+        .domain(['electric', 'hybrid', 'alternativeFuels', 'combustion', 'unknown'])
+        .range([
+          'var(--accent-blue)',
+          'var(--accent-blue-light)',
+          'var(--accent-green)',
+          'var(--pie-combustion)',
+          'var(--pie-unknown)'
+        ]);
 
     const categoryNames = {
       electric: 'Electric',
@@ -313,90 +344,91 @@
       unknown: 'Unknown'
     };
 
-    d3.csv('data/better data new(2).csv').then(data=>{
+    d3.csv('data/better data new(2).csv').then(data => {
       let allData = data;
       let current = 'California';
-      populate(data.map(d=>d.state).sort());
+      populate(data.map(d => d.state).sort());
       update(current);
       initSearch();
 
-      function populate(states){
+      function populate(states) {
         const dd = d3.select('#stateDropdown').html('');
-        states.forEach(s=>{
+        states.forEach(s => {
           dd.append('div')
-            .attr('class','dropdown-item')
+            .attr('class', 'dropdown-item')
             .text(s)
-            .on('click',()=>{
-              d3.select('#stateSearch').property('value',s);
+            .on('click', () => {
+              d3.select('#stateSearch').property('value', s);
               current = s;
               update(s);
-              dd.style('display','none');
+              dd.style('display', 'none');
             });
         });
       }
 
-      function initSearch(){
+      function initSearch() {
         const inpt = d3.select('#stateSearch');
-        const dd   = d3.select('#stateDropdown');
-        inpt.on('focus',()=>dd.style('display','block'));
-        inpt.on('input',function(){
+        const dd = d3.select('#stateDropdown');
+        inpt.on('focus', () => dd.style('display', 'block'));
+        inpt.on('input', function () {
           const txt = this.value.toLowerCase();
           dd.selectAll('.dropdown-item')
-            .style('display',d=> d3.select(d3.select(this).node()).text().toLowerCase().includes(txt) ? 'block' : 'none');
+            .style('display', d => d3.select(d3.select(this).node()).text().toLowerCase().includes(txt) ? 'block' : 'none');
         });
-        d3.select(document).on('click',e=>{
+        d3.select(document).on('click', e => {
           if (!inpt.node().contains(e.target) && !dd.node().contains(e.target))
-            dd.style('display','none');
+            dd.style('display', 'none');
         });
       }
 
-      function update(state){
-        const row = allData.find(d=>d.state===state);
+      function update(state) {
+        const row = allData.find(d => d.state === state);
         if (!row) return;
-        const pieData = ['electric','hybrid','alternativeFuels','combustion','unknown']
-          .map(type=>({type,value:+row[type]}));
-        const total = d3.sum(pieData,d=>d.value);
-        pieData.forEach(d=>d.percent = d.value/total);
+        const pieData = ['electric', 'hybrid', 'alternativeFuels', 'combustion', 'unknown']
+          .map(type => ({ type, value: +row[type] }));
+        const total = d3.sum(pieData, d => d.value);
+        pieData.forEach(d => d.percent = d.value / total);
 
-        const pieGen = d3.pie().value(d=>d.value).sort(null);
+        const pieGen = d3.pie().value(d => d.value).sort(null);
         const arcGen = d3.arc().innerRadius(0).outerRadius(radius);
-        const arcHover = d3.arc().innerRadius(0).outerRadius(radius*1.1);
+        const arcHover = d3.arc().innerRadius(0).outerRadius(radius * 1.1);
 
         svgPie.selectAll('.arc').remove();
         const arcs = svgPie.selectAll('.arc')
           .data(pieGen(pieData))
-          .enter().append('g').attr('class','arc');
+          .enter().append('g').attr('class', 'arc');
 
         arcs.append('path')
-          .attr('d',arcGen)
-          .attr('fill',d=>colorScale(d.data.type))
-          .on('mouseover', (e,d)=>{
-            tooltipPie.transition().duration(200).style('opacity',0.9);
+          .attr('d', arcGen)
+          .attr('fill', d => colorScale(d.data.type))
+          .on('mouseover', (e, d) => {
+            tooltipPie.transition().duration(200).style('opacity', 0.9);
             tooltipPie.html(`<strong>${categoryNames[d.data.type]}</strong><br>
               Count: ${d.data.value.toLocaleString()}<br>
-              ${ (d.data.percent).toLocaleString(undefined,{style:'percent',minimumFractionDigits:2}) }
+              ${(d.data.percent).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 })}
             `)
-            .style('left',e.pageX+10+'px')
-            .style('top', e.pageY-28+'px');
-            d3.select(e.currentTarget).transition().duration(200).attr('d',arcHover);
+              .style('left', e.pageX + 10 + 'px')
+              .style('top', e.pageY - 28 + 'px');
+            d3.select(e.currentTarget).transition().duration(200).attr('d', arcHover);
           })
-          .on('mouseout', (e,d)=>{
-            tooltipPie.transition().duration(500).style('opacity',0);
-            d3.select(e.currentTarget).transition().duration(200).attr('d',arcGen);
+          .on('mouseout', (e, d) => {
+            tooltipPie.transition().duration(500).style('opacity', 0);
+            d3.select(e.currentTarget).transition().duration(200).attr('d', arcGen);
           });
 
         // Legend
         const legend = d3.select('#legend').html('');
-        pieData.forEach(d=>{
-          const item = legend.append('div').attr('class','legend-item');
+        pieData.forEach(d => {
+          const item = legend.append('div').attr('class', 'legend-item');
           item.append('div')
-            .attr('class','legend-color')
+            .attr('class', 'legend-color')
             .style('background-color', colorScale(d.type));
           item.append('div')
-            .text(`${categoryNames[d.type]}: ${d.value.toLocaleString()} (${(d.percent).toLocaleString(undefined,{style:'percent',minimumFractionDigits:2})})`);
+            .text(`${categoryNames[d.type]}: ${d.value.toLocaleString()} (${(d.percent).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 })})`);
         });
       }
     });
   </script>
 </body>
+
 </html>

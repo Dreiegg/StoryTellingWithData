@@ -58,7 +58,6 @@ body {
 /* === Example Text unter der Überschrift === */
 .example-text {
     margin-bottom: var(--gap-small);
-    color: var(--text-muted);
     font-size: var(--font-size-body);
     line-height: var(--line-height);
 }
