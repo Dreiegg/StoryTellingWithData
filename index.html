@@ -2,19 +2,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF      <div class="example-text" style="color: var(--text-default); line-height: 1.6;">Across the United States, there are now 3,555,900 electric vehicles - a strong indicator of the country's advancing transition towards cleaner transportation. California leads the way, both in absolute numbers and in electric vehicles per capita. Looking beyond the top-line figures, states like Hawaii and Nevada demonstrate how regions with mid-range total counts are making remarkable strides in electric vehicle adoption relative to their populations.</div>8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Storytelling with Data</title>
   <link rel="stylesheet" href="style/reset.css" />
   <link rel="stylesheet" href="style/variables.css" />
   <link rel="stylesheet" href="style/main.css" />
+  <style>
+    /* Custom color scheme for this page */
+    :root {
+      /* Main colors */
+      --bg-body: #1e1e1e;
+      --bg-block: #2a2a2a;
+      --bg-element: #333333;
+      --text-default: #ffffff;
+      --text-muted: #cccccc;
+      --border-color: #444444;
+      
+      /* Accent colors */
+      --accent-blue: #67c7ff;
+      --accent-blue-light: #8bffe6;
+      --accent-green: #33cc99;
+      
+      /* Chart colors */
+      --bar-color: var(--accent-blue);
+      --bar-highlight: var(--accent-green);
+      --bar-hover: var(--accent-blue-light);
+      
+      /* Pie chart colors */
+      --pie-electric: var(--accent-blue);
+      --pie-hybrid: var(--accent-blue-light);
+      --pie-altfuels: var(--accent-green);
+      --pie-combustion: #8a8a8a;
+      --pie-unknown: #4d4d4d;
+    }
+    
+    /* Additional styles */
+    a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    a:hover {
+      color: var(--accent-blue-light);
+      text-decoration: underline;
+    }
+    
+    .story {
+      color: var(--accent-blue);
+      font-weight: bold;
+    }
+    
+    h1, h2, h3 {
+      color: var(--text-default);
+    }
+    
+    select, .search-input {
+      background-color: var(--bg-element);
+      color: var(--text-default);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-small);
+    }
+    
+    select:focus, .search-input:focus {
+      border-color: var(--accent-blue);
+    }
+    
+    .tooltip {
+      background: var(--bg-element) !important;
+      color: var(--text-default) !important;
+      border: 1px solid var(--accent-blue) !important;
+    }
+    
+    /* Additional custom styles for this page */
+    .story-block {
+      background-color: var(--bg-block);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    
+    .extra {
+      flex: 1;
+      min-width: 250px;
+    }
+    
+    .chart {
+      flex: 2;
+      min-width: 300px;
+    }
+    
+    .legend-item {
+      color: var(--text-default);
+    }
+    
+    /* Style for dropdown items */
+    .dropdown-item {
+      color: var(--text-default);
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .dropdown-item:hover {
+      background-color: var(--accent-blue);
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <main class="container">
 
     <!-- Story 1: Balkendiagramm -->
     <section class="story-block">
-      <div class="story">E-Vehicles by State</div>
+      <div class="story" style="color: var(--accent-blue); font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">E-Vehicles by State</div>
       <div class="example-text">Across the United States, there are now 3,555,900 electric vehicles - a strong indicator of the country’s advancing transition towards cleaner transportation. California leads the way, both in absolute numbers and in electric vehicles per capita. Looking beyond the top-line figures, states like Hawaii and Nevada demonstrate how regions with mid-range total counts are making remarkable strides in electric vehicle adoption relative to their populations.</div>
       <div class="row">
         <div class="extra">
@@ -23,12 +129,10 @@
 
         </div>
         
-          <div class="chart">
-          <h1 style="text-align: center">Electrical vehicle registration by US-state</h1>
-          <p style="text-align: center">Toggle between absolute and relative data</p>
-          <p style="text-align: center">Authors: …</p>
-          <div class="dropdown-container" style="max-width: var(--max-width-selection); margin: 1rem auto;">
-            <select id="selection">
+          <div class="chart">          <h1 style="text-align: center; color: var(--accent-blue);">Electrical vehicle registration by US-state</h1>
+          <p style="text-align: center; color: var(--text-default);">Toggle between absolute and relative data</p>
+          <p style="text-align: center; color: var(--text-muted);">Authors: …</p>          <div class="dropdown-container" style="max-width: var(--max-width-selection); margin: 1rem auto;">
+            <select id="selection" style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem;">
               <option>Overview</option>
               <option>Absolute</option>
               <option>Relative</option>
@@ -42,18 +146,17 @@
 
     <!-- Story 2: Tortendiagramm -->
     <section class="story-block">
-      <div class="story">How does your state cut it?</div>
-      <div class="example-text">The following chart highlights the current composition of vehicle types across all states. Combustion-engine vehicles still make up the largest share by a wide margin. However, electric vehicles have seen consistent growth over the years and are steadily becoming a more significant part of the fleet. While combustion remains dominant for now, the shift towards electric mobility is clearly underway, signaling promising progress.</div>
+      <div class="story" style="color: var(--accent-blue); font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">How does your state cut it?</div>
+      <div class="example-text" style="color: var(--text-default); line-height: 1.6;">The following chart highlights the current composition of vehicle types across all states. Combustion-engine vehicles still make up the largest share by a wide margin. However, electric vehicles have seen consistent growth over the years and are steadily becoming a more significant part of the fleet. While combustion remains dominant for now, the shift towards electric mobility is clearly underway, signaling promising progress.</div>
       <div class="row">
         <div class="extra">
           <!-- This chart shows the distribution of engine types. Use the search bar to explore different states and see how the numbers vary. You can also hover over the chart sections to get more detailed information about each category. -->
-          <img src="car-illustration2.png" alt="Decorative car illustration" style="max-width: 100%; height: auto; display: block; margin-bottom: 0.5rem;">
+          <img src="car-illustration2.png" alt="Decorative car illustration" style="max-width: 100%; height: auto; display: block; margin-bottom: 0.5rem; ">
 
 </div>
-        <div class="chart">
-          <div class="dropdown-container" style="max-width: var(--max-width-dropdown); margin: 0 auto var(--gap-small);">
-            <input type="text" id="stateSearch" class="search-input" placeholder="Search or select a state...">
-            <div id="stateDropdown" class="dropdown-list"></div>
+        <div class="chart">          <div class="dropdown-container" style="max-width: var(--max-width-dropdown); margin: 0 auto var(--gap-small);">
+            <input type="text" id="stateSearch" class="search-input" placeholder="Search or select a state..." style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem; width: 100%; border-radius: var(--radius-small);">
+            <div id="stateDropdown" class="dropdown-list" style="background-color: var(--bg-element); border: 1px solid var(--accent-blue);"></div>
           </div>
           <div id="pie-chart"></div>
           <div class="legend" id="legend"></div>
@@ -192,14 +295,12 @@
       .style('padding','0.5rem')
       .style('border-radius','var(--radius-small)')
       .style('opacity',0)
-      .style('pointer-events','none');
-
-    const colorScale = d3.scaleOrdinal()
+      .style('pointer-events','none');    const colorScale = d3.scaleOrdinal()
       .domain(['electric','hybrid','alternativeFuels','combustion','unknown'])
       .range([
-        'var(--pie-electric)',
-        'var(--pie-hybrid)',
-        'var(--pie-altfuels)',
+        'var(--accent-blue)',
+        'var(--accent-blue-light)',
+        'var(--accent-green)',
         'var(--pie-combustion)',
         'var(--pie-unknown)'
       ]);
