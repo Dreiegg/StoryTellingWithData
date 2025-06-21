@@ -78,7 +78,9 @@
       background: var(--bg-element) !important;
       color: var(--text-default) !important;
       border: 1px solid var(--accent-blue) !important;
-    }    /* Additional custom styles for this page */
+    }
+
+    /* Additional custom styles for this page */
     .story-block {
       background-color: var(--bg-block);
       border: 1px solid var(--border-color);
@@ -142,11 +144,13 @@
 
     .pie-chart-container {
       margin-top: 1rem;
-    }    /* Enhanced tooltip styling */
+    }
+
+    /* Enhanced tooltip styling */
     .tooltip {
       text-align: center;
     }
-    
+
     .tooltip strong {
       color: var(--accent-blue);
       font-size: 1.1em;
@@ -162,7 +166,7 @@
     <!-- Story 1: Balkendiagramm -->
     <section class="story-block">
       <div class="story"
-        style="color: var(--accent-blue); font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">E-Vehicles by
+        style="color: var(--accent-blue); font-size: 2.1rem; font-weight: bold; margin-bottom: 0.5rem;">E-Vehicles by
         State</div>
       <div class="example-text">Across the United States, there are now 3,555,900 electric vehicles - a strong indicator
         of the country’s advancing transition towards cleaner transportation. California leads the way, both in absolute
@@ -200,13 +204,14 @@
     <!-- Story 2: Tortendiagramm -->
     <section class="story-block">
       <div class="story"
-        style="color: var(--accent-blue); font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">How does your
+        style="color: var(--accent-blue); font-size: 2.1rem; font-weight: bold; margin-bottom: 0.5rem;">How does your
         state cut it?</div>
       <div class="example-text" style="color: var(--text-default); line-height: 1.6;">The following chart highlights the
         current composition of vehicle types across all states. Combustion-engine vehicles still make up the largest
         share by a wide margin. However, electric vehicles have seen consistent growth over the years and are steadily
         becoming a more significant part of the fleet. While combustion remains dominant for now, the shift towards
-        electric mobility is clearly underway, signaling promising progress.</div>      <div class="row">
+        electric mobility is clearly underway, signaling promising progress.</div>
+      <div class="row">
         <div class="extra">
           <!-- This chart shows the distribution of engine types. Use the search bar to explore different states and see how the numbers vary. You can also hover over the chart sections to get more detailed information about each category. -->
           <img src="car-illustration2.png" alt="Decorative car illustration"
@@ -214,17 +219,28 @@
 
         </div>
         <div class="chart">
-          <div class="pie-chart-container" style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">            <div class="pie-left-column" style="flex: 1; min-width: 250px;">                <div id="legend" style="margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-small); padding: 1rem; background-color: var(--bg-element);">
-                <h3 style="margin-bottom: 0.75rem; color: var(--accent-blue); font-size: 1rem;">Vehicle Types Distribution</h3>
-              </div><div class="dropdown-container" style="position: relative;">
+          <div class="pie-chart-container"
+            style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
+            <div class="pie-left-column" style="flex: 1; min-width: 250px;">
+              <div id="legend"
+                style="margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-small); padding: 1rem; background-color: var(--bg-element);">
+                <h3 style="margin-bottom: 0.75rem; color: var(--accent-blue); font-size: 1rem;">Vehicle Types
+                  Distribution</h3>
+              </div>
+              <div class="dropdown-container" style="position: relative;">
                 <input type="text" id="stateSearch" class="search-input" placeholder="Click to select a state..."
                   style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem; width: 100%; border-radius: var(--radius-small); cursor: pointer; padding-right: 30px;">
-                <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--accent-blue); pointer-events: none;">▼</span>
+                <span
+                  style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--accent-blue); pointer-events: none;">▼</span>
                 <div id="stateDropdown" class="dropdown-list"
-                  style="background-color: var(--bg-element); border: 1px solid var(--accent-blue); width: 100%; display: none; max-height: 200px; overflow-y: auto;"></div>
+                  style="background-color: var(--bg-element); border: 1px solid var(--accent-blue); width: 100%; display: none; max-height: 200px; overflow-y: auto;">
+                </div>
               </div>
-            </div><div class="pie-right-column" style="flex: 1.5; min-width: 300px;">
-              <h3 style="text-align: center; margin-bottom: 0.75rem; color: var(--accent-blue); font-size: 1rem;">Vehicle Distribution in <span id="selected-state">United States</span></h3>
+            </div>
+            <div class="pie-right-column" style="flex: 1.5; min-width: 300px;">
+              <h3 style="text-align: center; color: var(--accent-blue); font-size: 1rem;">
+                Vehicle Distribution in <span id="selected-state">United States</span></h3>
+              <p style="text-align: center; color: var(--text-default);">Select state in dropdown</p>
               <div id="pie-chart"></div>
             </div>
           </div>
@@ -249,7 +265,7 @@
       data.forEach(d => {
         d.electric = +d.electric;
         d.rel_electric = +d.rel_electric;
-      });      const tooltip = d3.select(".chart")
+      }); const tooltip = d3.select(".chart")
         .append("div")
         .attr("class", "tooltip")
         .style("position", "absolute")
@@ -260,34 +276,34 @@
         .style("opacity", 0)
         .style("pointer-events", "none")
         .style("min-width", "150px")
-        .style("box-shadow", "0 2px 5px rgba(0,0,0,0.2)");      let yType = "electric";
+        .style("box-shadow", "0 2px 5px rgba(0,0,0,0.2)"); let yType = "electric";
       const select = d3.select("#selection");
-      
+
       select.on("change", () => {
         const v = select.node().value;
         let filteredData = [...data]; // Create a copy of the original data
-        
-        if (v === "Absolute") { 
+
+        if (v === "Absolute") {
           // Remove United States from Absolute view
           filteredData = data.filter(d => d.state !== "United States");
-          filteredData.sort((a, b) => d3.descending(a.electric, b.electric)); 
-          yType = "electric"; 
+          filteredData.sort((a, b) => d3.descending(a.electric, b.electric));
+          yType = "electric";
         }
-        else if (v === "Relative") { 
+        else if (v === "Relative") {
           // Keep United States in Relative view
-          filteredData.sort((a, b) => d3.descending(a.rel_electric, b.rel_electric)); 
-          yType = "rel_electric"; 
+          filteredData.sort((a, b) => d3.descending(a.rel_electric, b.rel_electric));
+          yType = "rel_electric";
         }
-        else { 
+        else {
           // Remove United States from Overview
           filteredData = data.filter(d => d.state !== "United States");
-          filteredData.sort((a, b) => d3.ascending(a.state, b.state)); 
-          yType = "electric"; 
+          filteredData.sort((a, b) => d3.ascending(a.state, b.state));
+          yType = "electric";
         }
-        
+
         drawChart(filteredData);
       });
-      
+
       function drawChart(filteredData) {
         const container = d3.select("#chartContainer").html("");
         const svg = container.append("svg")
@@ -316,54 +332,55 @@
             yType === "rel_electric"
               ? d3.format(".1%")(d)
               : d3.format(".1f")(d / 1_000_000) + " Mill"
-          ));        g.selectAll("rect")
-          .data(filteredData)
-          .enter()
-          .append("rect")
-          .attr("x", d => x(d.state))
-          .attr("y", d => y(d[yType]))
-          .attr("width", x.bandwidth())
-          .attr("height", d => innerH - y(d[yType]))
-          .attr("fill", d =>
-            d[yType] === yMax
-              ? "var(--bar-highlight)"
-              : "var(--bar-color)"
-          ).on("mouseover", function (event, d) {
-            tooltip.transition().duration(200).style("opacity", 0.9);
-            
-            // Create German-style number format with dot for thousands and no decimal for integers
-            const numberFormatter = new Intl.NumberFormat('de-DE', { 
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0
-            });
-            
-            // Create German-style percent format with comma for decimal
-            const percentFormatter = new Intl.NumberFormat('de-DE', { 
-              style: 'percent', 
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
-            });
-            
-            tooltip.html(`
+          )); g.selectAll("rect")
+            .data(filteredData)
+            .enter()
+            .append("rect")
+            .attr("x", d => x(d.state))
+            .attr("y", d => y(d[yType]))
+            .attr("width", x.bandwidth())
+            .attr("height", d => innerH - y(d[yType]))
+            .attr("fill", d =>
+              d[yType] === yMax
+                ? "var(--bar-highlight)"
+                : "var(--bar-color)"
+            ).on("mouseover", function (event, d) {
+              tooltip.transition().duration(200).style("opacity", 0.9);
+
+              // Create German-style number format with dot for thousands and no decimal for integers
+              const numberFormatter = new Intl.NumberFormat('de-DE', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+              });
+
+              // Create German-style percent format with comma for decimal
+              const percentFormatter = new Intl.NumberFormat('de-DE', {
+                style: 'percent',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              });
+
+              tooltip.html(`
               <strong>${d.state}</strong><br>
               ${numberFormatter.format(d.electric)} EVs<br>
               ${percentFormatter.format(d.rel_electric)} of vehicles
             `)
-              .style("left", event.pageX + 10 + "px")
-              .style("top", event.pageY - 28 + "px");
-            d3.select(this).attr("fill", "var(--bar-hover)");
-          })
-          .on("mousemove", event => {
-            tooltip.style("left", event.pageX + 10 + "px")
-              .style("top", event.pageY - 28 + "px");
-          })
-          .on("mouseout", function (event, d) {
-            tooltip.transition().duration(500).style("opacity", 0);
-            d3.select(this).attr("fill",
-              d[yType] === yMax
-                ? "var(--bar-highlight)"
-                : "var(--bar-color)"
-            );          });
+                .style("left", event.pageX + 10 + "px")
+                .style("top", event.pageY - 28 + "px");
+              d3.select(this).attr("fill", "var(--bar-hover)");
+            })
+            .on("mousemove", event => {
+              tooltip.style("left", event.pageX + 10 + "px")
+                .style("top", event.pageY - 28 + "px");
+            })
+            .on("mouseout", function (event, d) {
+              tooltip.transition().duration(500).style("opacity", 0);
+              d3.select(this).attr("fill",
+                d[yType] === yMax
+                  ? "var(--bar-highlight)"
+                  : "var(--bar-color)"
+              );
+            });
       }
 
       // Initial draw with filtered data (Overview - no United States)
@@ -385,26 +402,26 @@
       .attr('viewBox', `0 0 ${width} ${height}`)
       .attr('preserveAspectRatio', 'xMidYMid meet')
       .append('g')
-      .attr('transform', `translate(${width / 2},${height / 2})`);    const tooltipPie = d3.select('body')
-      .append('div')
-      .attr('class', 'tooltip')
-      .style('position', 'absolute')
-      .style('background', 'var(--bg-element)')
-      .style('border', '1px solid var(--accent-blue)')
-      .style('padding', '0.75rem')
-      .style('border-radius', 'var(--radius-small)')
-      .style('opacity', 0)
-      .style('pointer-events', 'none')
-      .style('min-width', '150px')
-      .style('box-shadow', '0 2px 5px rgba(0,0,0,0.2)');const colorScale = d3.scaleOrdinal()
-        .domain(['electric', 'hybrid', 'alternativeFuels', 'combustion', 'unknown'])
-        .range([
-          'var(--accent-blue)',
-          'var(--accent-blue-light)',
-          'var(--accent-green)',
-          'var(--pie-combustion)',
-          'var(--pie-unknown)'
-        ]);
+      .attr('transform', `translate(${width / 2},${height / 2})`); const tooltipPie = d3.select('body')
+        .append('div')
+        .attr('class', 'tooltip')
+        .style('position', 'absolute')
+        .style('background', 'var(--bg-element)')
+        .style('border', '1px solid var(--accent-blue)')
+        .style('padding', '0.75rem')
+        .style('border-radius', 'var(--radius-small)')
+        .style('opacity', 0)
+        .style('pointer-events', 'none')
+        .style('min-width', '150px')
+        .style('box-shadow', '0 2px 5px rgba(0,0,0,0.2)'); const colorScale = d3.scaleOrdinal()
+          .domain(['electric', 'hybrid', 'alternativeFuels', 'combustion', 'unknown'])
+          .range([
+            'var(--accent-blue)',
+            'var(--accent-blue-light)',
+            'var(--accent-green)',
+            'var(--pie-combustion)',
+            'var(--pie-unknown)'
+          ]);
 
     const categoryNames = {
       electric: 'Electric',
@@ -412,7 +429,7 @@
       alternativeFuels: 'Alternative Fuels',
       combustion: 'Combustion',
       unknown: 'Unknown'
-    };    d3.csv('data/better data new(2).csv').then(data => {
+    }; d3.csv('data/better data new(2).csv').then(data => {
       let allData = data;
       let current = 'United States';
       populate(data.map(d => d.state).sort());
@@ -434,23 +451,23 @@
               dd.style('display', 'none');
             });
         });
-      }      function initSearch() {
+      } function initSearch() {
         const inpt = d3.select('#stateSearch');
         const dd = d3.select('#stateDropdown');
-        
+
         // Show dropdown when clicking on the input instead of on focus
         inpt.on('click', () => {
           const currentDisplay = dd.style('display');
           dd.style('display', currentDisplay === 'none' ? 'block' : 'none');
         });
-        
+
         inpt.on('input', function () {
           const txt = this.value.toLowerCase();
           // If the dropdown is hidden, show it when typing
           if (dd.style('display') === 'none') {
             dd.style('display', 'block');
-          }          dd.selectAll('.dropdown-item')
-            .style('display', function() {
+          } dd.selectAll('.dropdown-item')
+            .style('display', function () {
               const itemText = d3.select(this).text().toLowerCase();
               return itemText.includes(txt) ? 'block' : 'none';
             });
@@ -459,10 +476,10 @@
           if (!inpt.node().contains(e.target) && !dd.node().contains(e.target))
             dd.style('display', 'none');
         });
-      }      function update(state) {
+      } function update(state) {
         // Update the title with selected state
         d3.select('#selected-state').text(state);
-        
+
         const row = allData.find(d => d.state === state);
         if (!row) return;
         const pieData = ['electric', 'hybrid', 'alternativeFuels', 'combustion', 'unknown']
@@ -481,22 +498,22 @@
 
         arcs.append('path')
           .attr('d', arcGen)
-          .attr('fill', d => colorScale(d.data.type))          .on('mouseover', (e, d) => {
+          .attr('fill', d => colorScale(d.data.type)).on('mouseover', (e, d) => {
             tooltipPie.transition().duration(200).style('opacity', 0.9);
-            
+
             // Create German-style number format with dot for thousands and no decimal for integers
-            const numberFormatter = new Intl.NumberFormat('de-DE', { 
+            const numberFormatter = new Intl.NumberFormat('de-DE', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0
             });
-            
+
             // Create German-style percent format with comma for decimal
-            const percentFormatter = new Intl.NumberFormat('de-DE', { 
-              style: 'percent', 
+            const percentFormatter = new Intl.NumberFormat('de-DE', {
+              style: 'percent',
               minimumFractionDigits: 2,
               maximumFractionDigits: 2
             });
-            
+
             tooltipPie.html(`
               <strong>${categoryNames[d.data.type]}</strong><br>
               ${numberFormatter.format(d.data.value)}<br>
@@ -511,19 +528,19 @@
             d3.select(e.currentTarget).transition().duration(200).attr('d', arcGen);
           });        // Legend
         const legend = d3.select('#legend').html('');
-          // Create German-style number format with dot for thousands and no decimal for integers
-        const numberFormatter = new Intl.NumberFormat('de-DE', { 
+        // Create German-style number format with dot for thousands and no decimal for integers
+        const numberFormatter = new Intl.NumberFormat('de-DE', {
           minimumFractionDigits: 0,
           maximumFractionDigits: 0
         });
-        
+
         // Create German-style percent format with comma for decimal
-        const percentFormatter = new Intl.NumberFormat('de-DE', { 
-          style: 'percent', 
+        const percentFormatter = new Intl.NumberFormat('de-DE', {
+          style: 'percent',
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
         });
-        
+
         pieData.forEach(d => {
           const item = legend.append('div').attr('class', 'legend-item');
           item.append('div')
