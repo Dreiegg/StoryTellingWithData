@@ -201,18 +201,17 @@
 
         </div>
         <div class="chart">
-          <div class="pie-chart-container" style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
-            <div class="pie-left-column" style="flex: 1; min-width: 250px;">              <div class="dropdown-container" style="margin-bottom: var(--gap-small);">
-                <input type="text" id="stateSearch" class="search-input" placeholder="Search or select a state..."
-                  style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem; width: 100%; border-radius: var(--radius-small);">
-                <div id="stateDropdown" class="dropdown-list"
-                  style="background-color: var(--bg-element); border: 1px solid var(--accent-blue); width: 100%;"></div>
-              </div>
-              <div id="legend" style="margin-top: 1rem;">
+          <div class="pie-chart-container" style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">            <div class="pie-left-column" style="flex: 1; min-width: 250px;">                <div id="legend" style="margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-small); padding: 1rem; background-color: var(--bg-element);">
                 <h3 style="margin-bottom: 0.75rem; color: var(--accent-blue); font-size: 1rem;">Vehicle Types Distribution</h3>
+              </div><div class="dropdown-container" style="position: relative;">
+                <input type="text" id="stateSearch" class="search-input" placeholder="Click to select a state..."
+                  style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem; width: 100%; border-radius: var(--radius-small); cursor: pointer; padding-right: 30px;">
+                <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--accent-blue); pointer-events: none;">▼</span>
+                <div id="stateDropdown" class="dropdown-list"
+                  style="background-color: var(--bg-element); border: 1px solid var(--accent-blue); width: 100%; display: none; max-height: 200px; overflow-y: auto;"></div>
               </div>
-            </div>            <div class="pie-right-column" style="flex: 1.5; min-width: 300px;">
-              <h3 style="text-align: center; margin-bottom: 0.75rem; color: var(--accent-blue); font-size: 1rem;">Vehicle Distribution in <span id="selected-state">California</span></h3>
+            </div><div class="pie-right-column" style="flex: 1.5; min-width: 300px;">
+              <h3 style="text-align: center; margin-bottom: 0.75rem; color: var(--accent-blue); font-size: 1rem;">Vehicle Distribution in <span id="selected-state">United States</span></h3>
               <div id="pie-chart"></div>
             </div>
           </div>
@@ -371,13 +370,13 @@
       alternativeFuels: 'Alternative Fuels',
       combustion: 'Combustion',
       unknown: 'Unknown'
-    };
-
-    d3.csv('data/better data new(2).csv').then(data => {
+    };    d3.csv('data/better data new(2).csv').then(data => {
       let allData = data;
-      let current = 'California';
+      let current = 'United States';
       populate(data.map(d => d.state).sort());
       update(current);
+      // Set the search input value to the default state
+      d3.select('#stateSearch').property('value', current);
       initSearch();
 
       function populate(states) {
@@ -393,14 +392,22 @@
               dd.style('display', 'none');
             });
         });
-      }
-
-      function initSearch() {
+      }      function initSearch() {
         const inpt = d3.select('#stateSearch');
         const dd = d3.select('#stateDropdown');
-        inpt.on('focus', () => dd.style('display', 'block'));
+        
+        // Show dropdown when clicking on the input instead of on focus
+        inpt.on('click', () => {
+          const currentDisplay = dd.style('display');
+          dd.style('display', currentDisplay === 'none' ? 'block' : 'none');
+        });
+        
         inpt.on('input', function () {
           const txt = this.value.toLowerCase();
+          // If the dropdown is hidden, show it when typing
+          if (dd.style('display') === 'none') {
+            dd.style('display', 'block');
+          }
           dd.selectAll('.dropdown-item')
             .style('display', d => d3.select(d3.select(this).node()).text().toLowerCase().includes(txt) ? 'block' : 'none');
         });
