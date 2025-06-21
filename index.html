@@ -104,6 +104,9 @@
     }
 
     .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
       color: var(--text-default);
     }
 
@@ -117,6 +120,25 @@
     .dropdown-item:hover {
       background-color: var(--accent-blue);
       color: white;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    #legend {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-small);
+      padding: 1rem;
+      background-color: var(--bg-element);
+    }
+
+    .pie-chart-container {
+      margin-top: 1rem;
     }
   </style>
 </head>
@@ -171,8 +193,7 @@
         current composition of vehicle types across all states. Combustion-engine vehicles still make up the largest
         share by a wide margin. However, electric vehicles have seen consistent growth over the years and are steadily
         becoming a more significant part of the fleet. While combustion remains dominant for now, the shift towards
-        electric mobility is clearly underway, signaling promising progress.</div>
-      <div class="row">
+        electric mobility is clearly underway, signaling promising progress.</div>      <div class="row">
         <div class="extra">
           <!-- This chart shows the distribution of engine types. Use the search bar to explore different states and see how the numbers vary. You can also hover over the chart sections to get more detailed information about each category. -->
           <img src="car-illustration2.png" alt="Decorative car illustration"
@@ -180,15 +201,21 @@
 
         </div>
         <div class="chart">
-          <div class="dropdown-container"
-            style="max-width: var(--max-width-dropdown); margin: 0 auto var(--gap-small);">
-            <input type="text" id="stateSearch" class="search-input" placeholder="Search or select a state..."
-              style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem; width: 100%; border-radius: var(--radius-small);">
-            <div id="stateDropdown" class="dropdown-list"
-              style="background-color: var(--bg-element); border: 1px solid var(--accent-blue);"></div>
+          <div class="pie-chart-container" style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;">
+            <div class="pie-left-column" style="flex: 1; min-width: 250px;">              <div class="dropdown-container" style="margin-bottom: var(--gap-small);">
+                <input type="text" id="stateSearch" class="search-input" placeholder="Search or select a state..."
+                  style="background-color: var(--bg-element); color: var(--text-default); border: 1px solid var(--accent-blue); padding: 0.5rem; width: 100%; border-radius: var(--radius-small);">
+                <div id="stateDropdown" class="dropdown-list"
+                  style="background-color: var(--bg-element); border: 1px solid var(--accent-blue); width: 100%;"></div>
+              </div>
+              <div id="legend" style="margin-top: 1rem;">
+                <h3 style="margin-bottom: 0.75rem; color: var(--accent-blue); font-size: 1rem;">Vehicle Types Distribution</h3>
+              </div>
+            </div>            <div class="pie-right-column" style="flex: 1.5; min-width: 300px;">
+              <h3 style="text-align: center; margin-bottom: 0.75rem; color: var(--accent-blue); font-size: 1rem;">Vehicle Distribution in <span id="selected-state">California</span></h3>
+              <div id="pie-chart"></div>
+            </div>
           </div>
-          <div id="pie-chart"></div>
-          <div class="legend" id="legend"></div>
           <p style="text-align: right; font-size: 0.8rem; margin-top: 0.5rem; color: var(--text-muted);">Source: <a
               href="https://afdc.energy.gov/vehicle-registration?year=2023" target="_blank">Alternative Fuels Data
               Center - Vehicle Registration Counts (2023)</a><br>Authors: Antonia Pecha, Simon Schnetzer, Leo Schweiger,
@@ -307,14 +334,15 @@
   </script>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script>
-    // --- Story 2: Tortendiagramm ---
-    const width = 500, height = 500, margin = 40;
+  <script>    // --- Story 2: Tortendiagramm ---
+    const width = 400, height = 400, margin = 40;
     const radius = Math.min(width, height) / 2 - margin;
     const svgPie = d3.select('#pie-chart')
       .append('svg')
-      .attr('width', width)
+      .attr('width', '100%')
       .attr('height', height)
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet')
       .append('g')
       .attr('transform', `translate(${width / 2},${height / 2})`);
 
@@ -380,9 +408,10 @@
           if (!inpt.node().contains(e.target) && !dd.node().contains(e.target))
             dd.style('display', 'none');
         });
-      }
-
-      function update(state) {
+      }      function update(state) {
+        // Update the title with selected state
+        d3.select('#selected-state').text(state);
+        
         const row = allData.find(d => d.state === state);
         if (!row) return;
         const pieData = ['electric', 'hybrid', 'alternativeFuels', 'combustion', 'unknown']
