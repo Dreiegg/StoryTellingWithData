@@ -259,19 +259,35 @@
         .style("opacity", 0)
         .style("pointer-events", "none")
         .style("min-width", "150px")
-        .style("box-shadow", "0 2px 5px rgba(0,0,0,0.2)");
-
-      let yType = "electric";
+        .style("box-shadow", "0 2px 5px rgba(0,0,0,0.2)");      let yType = "electric";
       const select = d3.select("#selection");
+      
       select.on("change", () => {
         const v = select.node().value;
-        if (v === "Absolute") { data.sort((a, b) => d3.descending(a.electric, b.electric)); yType = "electric"; }
-        else if (v === "Relative") { data.sort((a, b) => d3.descending(a.rel_electric, b.rel_electric)); yType = "rel_electric"; }
-        else { data.sort((a, b) => d3.ascending(a.state, b.state)); yType = "electric"; }
-        drawChart();
+        let filteredData = [...data]; // Create a copy of the original data
+        
+        if (v === "Absolute") { 
+          // Remove United States from Absolute view
+          filteredData = data.filter(d => d.state !== "United States");
+          filteredData.sort((a, b) => d3.descending(a.electric, b.electric)); 
+          yType = "electric"; 
+        }
+        else if (v === "Relative") { 
+          // Keep United States in Relative view
+          filteredData.sort((a, b) => d3.descending(a.rel_electric, b.rel_electric)); 
+          yType = "rel_electric"; 
+        }
+        else { 
+          // Remove United States from Overview
+          filteredData = data.filter(d => d.state !== "United States");
+          filteredData.sort((a, b) => d3.ascending(a.state, b.state)); 
+          yType = "electric"; 
+        }
+        
+        drawChart(filteredData);
       });
-
-      function drawChart() {
+      
+      function drawChart(filteredData) {
         const container = d3.select("#chartContainer").html("");
         const svg = container.append("svg")
           .attr("viewBox", [0, 0, w, h]);
@@ -279,10 +295,10 @@
           .attr("transform", `translate(${margins.left},${margins.top})`);
 
         const x = d3.scaleBand()
-          .domain(data.map(d => d.state))
+          .domain(filteredData.map(d => d.state))
           .range([0, innerW])
           .padding(0.05);
-        const yMax = d3.max(data, d => d[yType]);
+        const yMax = d3.max(filteredData, d => d[yType]);
         const y = d3.scaleLinear()
           .domain([0, yMax]).nice()
           .range([innerH, 0]);
@@ -299,10 +315,8 @@
             yType === "rel_electric"
               ? d3.format(".1%")(d)
               : d3.format(".1f")(d / 1_000_000) + " Mill"
-          ));
-
-        g.selectAll("rect")
-          .data(data)
+          ));        g.selectAll("rect")
+          .data(filteredData)
           .enter()
           .append("rect")
           .attr("x", d => x(d.state))
@@ -313,7 +327,7 @@
             d[yType] === yMax
               ? "var(--bar-highlight)"
               : "var(--bar-color)"
-          )          .on("mouseover", function (event, d) {
+          ).on("mouseover", function (event, d) {
             tooltip.transition().duration(200).style("opacity", 0.9);
             
             // Create German-style number format with dot for thousands and no decimal for integers
@@ -348,11 +362,13 @@
               d[yType] === yMax
                 ? "var(--bar-highlight)"
                 : "var(--bar-color)"
-            );
-          });
+            );          });
       }
 
-      drawChart();
+      // Initial draw with filtered data (Overview - no United States)
+      let initialData = data.filter(d => d.state !== "United States");
+      initialData.sort((a, b) => d3.ascending(a.state, b.state));
+      drawChart(initialData);
     });
 
   </script>
